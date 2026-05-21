@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Week 3 — Application Selection | CMPN202</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<nav>
+  <a href="../index.html" class="brand">⚙️ CMPN202 OS Journal</a>
+  <ul class="nav-links">
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="week1.html">W1</a></li>
+    <li><a href="week2.html">W2</a></li>
+    <li><a href="week3.html" class="active">W3</a></li>
+    <li><a href="week4.html">W4</a></li>
+    <li><a href="week5.html">W5</a></li>
+    <li><a href="week6.html">W6</a></li>
+    <li><a href="week7.html">W7</a></li>
+  </ul>
+</nav>
+
+<div class="page-header container">
+  <span class="week-badge">Week 3 — Phase 3</span>
+  <h1>Application Selection for Performance Testing</h1>
+  <p>Selecting applications representing different workload types for systematic performance evaluation.</p>
+</div>
+
+<div class="container">
+
+  <div class="card">
+    <h2>✅ Phase Deliverables</h2>
+    <table class="week-table">
+      <thead>
+        <tr><th>Deliverable</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Application Selection Matrix</td><td><span class="badge badge-todo">To Do</span></td></tr>
+        <tr><td>Installation Documentation</td><td><span class="badge badge-todo">To Do</span></td></tr>
+        <tr><td>Expected Resource Profiles</td><td><span class="badge badge-todo">To Do</span></td></tr>
+        <tr><td>Monitoring Strategy</td><td><span class="badge badge-todo">To Do</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>📊 Application Selection Matrix</h2>
+    <p style="font-size:0.9rem;color:#6c757d;margin-bottom:1rem;">Five applications selected to represent distinct workload types, ensuring comprehensive coverage of OS resource management behaviours.</p>
+    <table class="week-table">
+      <thead>
+        <tr>
+          <th>Application</th>
+          <th>Workload Type</th>
+          <th>Justification</th>
+          <th>Key Metrics</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>stress-ng</strong></td>
+          <td>CPU-Intensive</td>
+          <td>Industry standard stress testing tool. Generates controlled CPU load to test scheduler behaviour and thermal performance.</td>
+          <td>CPU %, load average, temperature</td>
+        </tr>
+        <tr>
+          <td><strong>sysbench</strong></td>
+          <td>RAM-Intensive</td>
+          <td>Benchmarks memory throughput and latency. Reveals how the OS manages memory allocation under pressure.</td>
+          <td>Memory bandwidth, latency, page faults</td>
+        </tr>
+        <tr>
+          <td><strong>fio</strong></td>
+          <td>I/O-Intensive</td>
+          <td>Flexible I/O tester that simulates real disk workloads. Tests sequential and random read/write performance.</td>
+          <td>IOPS, throughput MB/s, latency ms</td>
+        </tr>
+        <tr>
+          <td><strong>iperf3</strong></td>
+          <td>Network-Intensive</td>
+          <td>Measures network throughput between workstation and server. Tests TCP/UDP bandwidth and connection quality.</td>
+          <td>Throughput Mbps, jitter, packet loss</td>
+        </tr>
+        <tr>
+          <td><strong>nginx</strong></td>
+          <td>Server Application</td>
+          <td>Production-grade web server representing real service workloads. Tests response time under concurrent connections.</td>
+          <td>Requests/sec, response time, connections</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>📦 Installation Documentation</h2>
+    <p style="font-size:0.9rem;color:#6c757d;margin-bottom:1rem;">All installations performed via SSH from Windows workstation. Commands executed as the <code>ubuntu</code> user with sudo privileges.</p>
+
+    <h3>Step 1 — Update package lists</h3>
+    <pre>ubuntu@server:~$ sudo apt update
+Hit:1 http://np.archive.ubuntu.com/ubuntu resolute InRelease
+Hit:2 http://security.ubuntu.com/ubuntu resolute-security InRelease
+Reading package lists... Done</pre>
+
+    <h3 style="margin-top:1rem;">Step 2 — Install stress-ng (CPU testing)</h3>
+    <pre>ubuntu@server:~$ sudo apt install stress-ng -y
+Reading package lists... Done
+Building dependency tree... Done
+The following NEW packages will be installed: stress-ng
+Setting up stress-ng ...</pre>
+
+    <h3 style="margin-top:1rem;">Step 3 — Install sysbench (RAM testing)</h3>
+    <pre>ubuntu@server:~$ sudo apt install sysbench -y
+Reading package lists... Done
+The following NEW packages will be installed: sysbench
+Setting up sysbench ...</pre>
+
+    <h3 style="margin-top:1rem;">Step 4 — Install fio (Disk I/O testing)</h3>
+    <pre>ubuntu@server:~$ sudo apt install fio -y
+Reading package lists... Done
+The following NEW packages will be installed: fio
+Setting up fio ...</pre>
+
+    <h3 style="margin-top:1rem;">Step 5 — Install iperf3 (Network testing)</h3>
+    <pre>ubuntu@server:~$ sudo apt install iperf3 -y
+Reading package lists... Done
+The following NEW packages will be installed: iperf3
+Setting up iperf3 ...</pre>
+
+    <h3 style="margin-top:1rem;">Step 6 — Install nginx (Web server)</h3>
+    <pre>ubuntu@server:~$ sudo apt install nginx -y
+Reading package lists... Done
+The following NEW packages will be installed: nginx
+Setting up nginx ...
+Created symlink /etc/systemd/system/multi-user.target.wants/nginx.service</pre>
+
+    <h3 style="margin-top:1rem;">Step 7 — Install monitoring tools</h3>
+    <pre>ubuntu@server:~$ sudo apt install htop sysstat -y
+Reading package lists... Done
+The following NEW packages will be installed: htop sysstat
+Setting up htop ...
+Setting up sysstat ...</pre>
+
+    <h3 style="margin-top:1rem;">Step 8 — Verify all installations</h3>
+    <pre>ubuntu@server:~$ stress-ng --version
+ubuntu@server:~$ sysbench --version
+ubuntu@server:~$ fio --version
+ubuntu@server:~$ iperf3 --version
+ubuntu@server:~$ nginx -v
+ubuntu@server:~$ htop --version</pre>
+
+    <div class="callout callout-warn">
+      <strong>📸 Evidence:</strong> Run these installation commands via SSH and replace the text above with actual screenshots showing the <code>ubuntu@server:~$</code> prompt and real output.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📈 Expected Resource Profiles</h2>
+    <p style="font-size:0.9rem;color:#6c757d;margin-bottom:1rem;">Anticipated resource usage for each application based on workload type. Actual measurements will be compared against these predictions in Week 6.</p>
+    <table class="week-table">
+      <thead>
+        <tr>
+          <th>Application</th>
+          <th>Expected CPU</th>
+          <th>Expected RAM</th>
+          <th>Expected Disk I/O</th>
+          <th>Expected Network</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>stress-ng</strong></td>
+          <td>90-100% (all cores)</td>
+          <td>Low ~100MB</td>
+          <td>Minimal</td>
+          <td>None</td>
+        </tr>
+        <tr>
+          <td><strong>sysbench</strong></td>
+          <td>Medium 40-60%</td>
+          <td>High ~2GB</td>
+          <td>Minimal</td>
+          <td>None</td>
+        </tr>
+        <tr>
+          <td><strong>fio</strong></td>
+          <td>Medium 30-50%</td>
+          <td>Low ~200MB</td>
+          <td>Very High</td>
+          <td>None</td>
+        </tr>
+        <tr>
+          <td><strong>iperf3</strong></td>
+          <td>Low 10-20%</td>
+          <td>Low ~50MB</td>
+          <td>None</td>
+          <td>Very High</td>
+        </tr>
+        <tr>
+          <td><strong>nginx</strong></td>
+          <td>Variable 20-70%</td>
+          <td>Medium ~300MB</td>
+          <td>Low-Medium</td>
+          <td>Medium-High</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>🔍 Monitoring Strategy</h2>
+    <p style="font-size:0.9rem;color:#6c757d;margin-bottom:1rem;">Measurement approach for each application — all monitoring performed remotely via SSH.</p>
+
+    <div class="grid-2">
+      <div class="lo-item">
+        <strong>stress-ng — CPU Monitoring</strong>
+        Use <code>top -bn1</code> and <code>mpstat 1 10</code> to capture per-core utilisation. Record load average from <code>uptime</code> before, during, and after stress test.
+      </div>
+      <div class="lo-item">
+        <strong>sysbench — Memory Monitoring</strong>
+        Use <code>free -h</code> and <code>vmstat 1 10</code> to track memory allocation. sysbench outputs its own MB/s throughput results directly.
+      </div>
+      <div class="lo-item">
+        <strong>fio — Disk I/O Monitoring</strong>
+        Use <code>iostat -x 1 10</code> to capture IOPS and throughput. fio generates detailed output including read/write speeds and latency percentiles.
+      </div>
+      <div class="lo-item">
+        <strong>iperf3 — Network Monitoring</strong>
+        Run iperf3 server on Ubuntu VM, client on Windows host. Captures bidirectional throughput in Mbps automatically.
+      </div>
+      <div class="lo-item">
+        <strong>nginx — Service Monitoring</strong>
+        Use <code>ab</code> (Apache Benchmark) from Windows to send concurrent requests. Monitor with <code>ss -s</code> for connections and <code>top</code> for CPU during load.
+      </div>
+      <div class="lo-item">
+        <strong>Baseline — All Tests</strong>
+        Record <code>free -h</code>, <code>top -bn1</code>, <code>df -h</code>, and <code>uptime</code> before every test run to establish a clean baseline for comparison.
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📝 Week 3 Reflection</h2>
+    <p style="font-size:0.9rem;">Application selection was driven by the need to isolate individual OS subsystems — CPU scheduler, memory manager, I/O subsystem, and network stack. By choosing tools that stress one resource primarily, the performance results will clearly reveal how Ubuntu 26.04 manages each subsystem under load.</p>
+    <br>
+    <p style="font-size:0.9rem;">Including nginx as a real server application is important because it creates a mixed workload combining CPU, memory, and network — closer to real production scenarios than synthetic benchmarks alone.</p>
+    <br>
+    <p style="font-size:0.9rem;"><strong>Key decision:</strong> stress-ng was chosen over the older <code>stress</code> package because it offers more granular control over workload types and produces more detailed output, making it easier to analyse OS behaviour quantitatively.</p>
+  </div>
+
+  <div class="pagination">
+    <a href="week2.html">← Week 2 — Security Planning</a>
+    <a href="week4.html">Week 4 — Initial Security →</a>
+  </div>
+
+</div>
+
+<footer>
+  <strong>CMPN202 Operating Systems Coursework</strong> &nbsp;|&nbsp; BSc Computer Science &nbsp;|&nbsp; University of Roehampton &nbsp;|&nbsp; 2025/26
+</footer>
+
+</body>
+</html>
