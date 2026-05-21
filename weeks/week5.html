@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Week 4 — Initial Security | CMPN202</title>
+  <title>Week 5 — Advanced Security | CMPN202</title>
   <link rel="stylesheet" href="../style.css">
 </head>
 <body>
@@ -15,17 +15,17 @@
     <li><a href="week1.html">W1</a></li>
     <li><a href="week2.html">W2</a></li>
     <li><a href="week3.html">W3</a></li>
-    <li><a href="week4.html" class="active">W4</a></li>
-    <li><a href="week5.html">W5</a></li>
+    <li><a href="week4.html">W4</a></li>
+    <li><a href="week5.html" class="active">W5</a></li>
     <li><a href="week6.html">W6</a></li>
     <li><a href="week7.html">W7</a></li>
   </ul>
 </nav>
 
 <div class="page-header container">
-  <span class="week-badge">Week 4 — Phase 4</span>
-  <h1>Initial Security &amp; System Configuration</h1>
-  <p>Deploying foundational security controls — SSH hardening, firewall configuration, and user privilege management.</p>
+  <span class="week-badge">Week 5 — Phase 5</span>
+  <h1>Advanced Security &amp; Monitoring Infrastructure</h1>
+  <p>Implementing AppArmor, fail2ban, automatic updates, and developing security and monitoring scripts.</p>
 </div>
 
 <div class="container">
@@ -37,149 +37,167 @@
         <tr><th>Deliverable</th><th>Status</th></tr>
       </thead>
       <tbody>
-        <tr><td>SSH key-based authentication configured</td><td><span class="badge badge-done">Done</span></td></tr>
-        <tr><td>Firewall configured (SSH from workstation only)</td><td><span class="badge badge-done">Done</span></td></tr>
-        <tr><td>Non-root administrative user created</td><td><span class="badge badge-done">Done</span></td></tr>
-        <tr><td>SSH access evidence (screenshots)</td><td><span class="badge badge-done">Done</span></td></tr>
-        <tr><td>Configuration files — before/after comparisons</td><td><span class="badge badge-done">Done</span></td></tr>
-        <tr><td>Firewall ruleset documentation</td><td><span class="badge badge-done">Done</span></td></tr>
-        <tr><td>Remote administration evidence</td><td><span class="badge badge-done">Done</span></td></tr>
+        <tr><td>AppArmor access control configured and documented</td><td><span class="badge badge-done">Done</span></td></tr>
+        <tr><td>Automatic security updates configured</td><td><span class="badge badge-done">Done</span></td></tr>
+        <tr><td>fail2ban intrusion detection configured</td><td><span class="badge badge-done">Done</span></td></tr>
+        <tr><td>security-baseline.sh script created</td><td><span class="badge badge-done">Done</span></td></tr>
+        <tr><td>monitor-server.sh script created</td><td><span class="badge badge-done">Done</span></td></tr>
       </tbody>
     </table>
   </div>
 
-  <div class="callout callout-info">
-    <strong>Administrative Constraint:</strong> All server configurations on this page were performed exclusively via SSH from the Windows workstation PowerShell. The VirtualBox console was not used for any administration tasks.
-  </div>
-
-  <!-- SSH KEY SETUP -->
+  <!-- APPARMOR -->
   <div class="card">
-    <h2>🔑 SSH Key-Based Authentication</h2>
-    <p style="font-size:0.9rem;color:#6c757d;margin-bottom:1rem;">Replacing password authentication with cryptographic key pairs — industry standard for secure server access.</p>
+    <h2>🛡️ AppArmor — Mandatory Access Control</h2>
+    <p style="font-size:0.9rem;color:#6c757d;margin-bottom:1rem;">AppArmor confines programs to a limited set of resources using per-program profiles. Even if a service is compromised, AppArmor limits what damage it can do.</p>
 
-    <h3>Step 1 — Generate SSH keypair on Windows workstation</h3>
-    <pre>PS C:\Users\spraj> ssh-keygen -t ed25519 -C "cmpn202-A00026193"
-Generating public/private ed25519 key pair.
-Enter file in which to save the key (C:\Users\spraj/.ssh/id_ed25519):
-Enter passphrase (empty for no passphrase):
-Your identification has been saved in C:\Users\spraj/.ssh/id_ed25519
-Your public key has been saved in C:\Users\spraj/.ssh/id_ed25519.pub</pre>
-
-    <h3 style="margin-top:1rem;">Step 2 — Copy public key to server</h3>
-    <pre>PS C:\Users\spraj> cat $env:USERPROFILE\.ssh\id_ed25519.pub | ssh ubuntu@192.168.1.66 "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys && chmod 700 ~/.ssh"</pre>
-
-    <h3 style="margin-top:1rem;">Step 3 — Test key-based login (no password prompt)</h3>
-    <img src="../images/week4-ssh-key-login.png"
-         alt="SSH key-based login with no password prompt"
-         style="max-width:100%;border-radius:8px;margin:0.75rem 0;border:1px solid #dee2e6;">
-
-    <h3 style="margin-top:1rem;">Step 4 — Harden sshd_config</h3>
-    <p style="font-size:0.85rem;color:#6c757d;margin-bottom:0.5rem;">Before and after comparison:</p>
-    <pre># Before
-#PermitRootLogin prohibit-password
-#PubkeyAuthentication yes
-PasswordAuthentication yes
-
-# After hardening
-PermitRootLogin no
-PubkeyAuthentication yes
-PasswordAuthentication no
-AllowUsers ubuntu
-Banner /etc/issue.net</pre>
-
-    <img src="../images/week4-sshd-config.png"
-         alt="sshd_config hardened settings in nano"
+    <h3>AppArmor status evidence</h3>
+    <img src="../images/week5-apparmor.png"
+         alt="AppArmor status showing 181 profiles loaded 105 in enforce mode"
          style="max-width:100%;border-radius:8px;margin:0.75rem 0;border:1px solid #dee2e6;">
 
     <div class="callout callout-success">
-      <strong>Security outcome:</strong> Password-based SSH login is completely disabled. Only the Windows workstation holding the private key can authenticate. Brute force password attacks are no longer possible.
+      <strong>AppArmor outcome:</strong> 181 profiles loaded, 105 profiles in enforce mode. AppArmor service active and enabled on startup. Provides mandatory access control across all confined applications.
     </div>
   </div>
 
-  <!-- FIREWALL -->
+  <!-- AUTOMATIC UPDATES -->
   <div class="card">
-    <h2>🔥 Firewall Configuration (UFW)</h2>
-    <p style="font-size:0.9rem;color:#6c757d;margin-bottom:1rem;">Configuring UFW to deny all incoming traffic except SSH from the workstation subnet only.</p>
+    <h2>🔄 Automatic Security Updates</h2>
+    <p style="font-size:0.9rem;color:#6c757d;margin-bottom:1rem;">Configuring unattended-upgrades to automatically apply security patches daily.</p>
 
-    <h3>Commands executed</h3>
-    <pre>ubuntu@server:~$ sudo ufw default deny incoming
-ubuntu@server:~$ sudo ufw default allow outgoing
-ubuntu@server:~$ sudo ufw allow from 192.168.1.0/24 to any port 22
-ubuntu@server:~$ sudo ufw enable
-ubuntu@server:~$ sudo ufw status verbose</pre>
+    <h3>Installation and configuration</h3>
+    <pre>ubuntu@server:~$ sudo apt install unattended-upgrades -y
+ubuntu@server:~$ sudo dpkg-reconfigure --priority=low unattended-upgrades
+ubuntu@server:~$ cat /etc/apt/apt.conf.d/20auto-upgrades
+APT::Periodic::Update-Package-Lists "1";
+APT::Periodic::Unattended-Upgrade "1";</pre>
 
-    <h3 style="margin-top:1rem;">Firewall ruleset evidence</h3>
-    <img src="../images/week4-firewall.png"
-         alt="UFW firewall status verbose showing rules"
+    <div class="callout callout-success">
+      <strong>Auto-updates outcome:</strong> Security patches applied automatically daily. Only security-origin packages updated automatically — reducing risk of breaking changes while ensuring vulnerabilities are patched promptly.
+    </div>
+  </div>
+
+  <!-- FAIL2BAN -->
+  <div class="card">
+    <h2>🚫 fail2ban — Intrusion Detection</h2>
+    <p style="font-size:0.9rem;color:#6c757d;margin-bottom:1rem;">fail2ban monitors log files and automatically bans IPs showing brute force behaviour. Configured to ban after 3 failed SSH attempts within 10 minutes for 1 hour.</p>
+
+    <h3>fail2ban service status</h3>
+    <img src="../images/week5-fail2ban-status.png"
+         alt="fail2ban service active and running"
+         style="max-width:100%;border-radius:8px;margin:0.75rem 0;border:1px solid #dee2e6;">
+
+    <h3 style="margin-top:1rem;">SSH jail verification</h3>
+    <img src="../images/week5-fail2ban-sshd.png"
+         alt="fail2ban SSH jail active showing 0 current bans"
          style="max-width:100%;border-radius:8px;margin:0.75rem 0;border:1px solid #dee2e6;">
 
     <div class="callout callout-success">
-      <strong>Security outcome:</strong> All incoming connections blocked by default. Only port 22 from 192.168.1.0/24 permitted. 999 other ports confirmed filtered by nmap scan in Week 7.
+      <strong>fail2ban outcome:</strong> SSH jail active and monitoring. 3 failed attempts within 10 minutes triggers automatic 1-hour ban. Currently 0 banned IPs — system is clean.
     </div>
   </div>
 
-  <!-- USER MANAGEMENT -->
+  <!-- SECURITY BASELINE SCRIPT -->
   <div class="card">
-    <h2>👤 User &amp; Privilege Management</h2>
-    <p style="font-size:0.9rem;color:#6c757d;margin-bottom:1rem;">Verifying non-root administrative user configuration following principle of least privilege.</p>
+    <h2>📜 security-baseline.sh</h2>
+    <p style="font-size:0.9rem;color:#6c757d;margin-bottom:1rem;">Script runs on the server via SSH and verifies all 13 security configurations from Phases 4 and 5. Includes colour-coded PASS/FAIL output.</p>
 
-    <img src="../images/week4-user-management.png"
-         alt="User management evidence showing whoami, id, getent group sudo, passwd -S root"
+    <h3>Script features</h3>
+    <div class="grid-2">
+      <div class="lo-item">
+        <strong>SSH checks (4)</strong>
+        Service running, password auth disabled, root login disabled, pubkey enabled.
+      </div>
+      <div class="lo-item">
+        <strong>Firewall checks (2)</strong>
+        UFW active, default incoming policy is DENY.
+      </div>
+      <div class="lo-item">
+        <strong>Intrusion detection (2)</strong>
+        fail2ban running, SSH jail active.
+      </div>
+      <div class="lo-item">
+        <strong>Access control (2)</strong>
+        AppArmor running, profiles in enforce mode.
+      </div>
+      <div class="lo-item">
+        <strong>Updates (2)</strong>
+        unattended-upgrades running, config file exists.
+      </div>
+      <div class="lo-item">
+        <strong>User security (1)</strong>
+        Root account locked, sudo users listed.
+      </div>
+    </div>
+
+    <h3 style="margin-top:1rem;">Script execution evidence — all 13 checks passing</h3>
+    <img src="../images/week5-security-baseline.png"
+         alt="Security baseline script output showing all PASS results"
          style="max-width:100%;border-radius:8px;margin:0.75rem 0;border:1px solid #dee2e6;">
 
     <div class="callout callout-success">
-      <strong>User management summary:</strong> Single non-root user 'ubuntu' with sudo privileges. Root account locked (status L). Only ubuntu in sudo group. Follows principle of least privilege.
+      <strong>Result: 13/13 checks passed — zero failures.</strong> All security controls from Phases 4 and 5 verified as correctly configured.
     </div>
   </div>
 
-  <!-- SSH ACCESS EVIDENCE -->
+  <!-- MONITOR SCRIPT -->
   <div class="card">
-    <h2>🖥️ SSH Access Evidence</h2>
-    <p style="font-size:0.9rem;color:#6c757d;margin-bottom:1rem;">Demonstrating successful SSH connection from Windows workstation to Ubuntu server.</p>
+    <h2>📊 monitor-server.sh</h2>
+    <p style="font-size:0.9rem;color:#6c757d;margin-bottom:1rem;">Script runs on the Windows workstation using Git Bash, connects via SSH key authentication, and collects 10 performance metrics from the server remotely.</p>
 
-    <h3>Initial password-based connection (Week 1)</h3>
-    <img src="../images/week4-ssh-connection.png"
-         alt="Successful SSH connection from Windows PowerShell to Ubuntu server"
-         style="max-width:100%;border-radius:8px;margin:0.75rem 0;border:1px solid #dee2e6;">
+    <h3>Metrics collected remotely</h3>
+    <div class="grid-2">
+      <div class="lo-item">
+        <strong>Connectivity check</strong>
+        Verifies SSH connection before proceeding. Exits if connection fails.
+      </div>
+      <div class="lo-item">
+        <strong>System uptime and load</strong>
+        Reports uptime and 1/5/15 minute load averages.
+      </div>
+      <div class="lo-item">
+        <strong>CPU and memory usage</strong>
+        Real-time CPU percentage and RAM used/available.
+      </div>
+      <div class="lo-item">
+        <strong>Disk usage</strong>
+        Filesystem utilisation excluding tmpfs mounts.
+      </div>
+      <div class="lo-item">
+        <strong>Top 5 processes by CPU</strong>
+        Identifies highest resource consumers.
+      </div>
+      <div class="lo-item">
+        <strong>Key service status</strong>
+        Checks ssh, ufw, fail2ban, apparmor all active.
+      </div>
+    </div>
 
-    <h3 style="margin-top:1rem;">Key-based connection (no password prompt)</h3>
-    <img src="../images/week4-ssh-key-login.png"
-         alt="SSH key-based login completing without password"
+    <h3 style="margin-top:1rem;">Monitor script execution from Windows workstation</h3>
+    <img src="../images/week5-monitor-script.png"
+         alt="Monitor script running from Git Bash showing remote metrics"
          style="max-width:100%;border-radius:8px;margin:0.75rem 0;border:1px solid #dee2e6;">
 
     <div class="callout callout-success">
-      <strong>SSH confirmed:</strong> Successfully connected from PS C:\Users\spraj via key-based authentication. No password prompt — proves key authentication working correctly.
-    </div>
-  </div>
-
-  <!-- REMOTE ADMIN EVIDENCE -->
-  <div class="card">
-    <h2>⌨️ Remote Administration Evidence</h2>
-    <p style="font-size:0.9rem;color:#6c757d;margin-bottom:1rem;">All server configuration performed exclusively via SSH — no direct console access used.</p>
-
-    <pre>ubuntu@server:~$ uptime
-ubuntu@server:~$ sudo ufw status verbose
-ubuntu@server:~$ sudo systemctl list-units --type=service --state=running
-ubuntu@server:~$ sudo fail2ban-client status
-ubuntu@server:~$ bash ~/security-baseline.sh</pre>
-
-    <div class="callout callout-success">
-      <strong>Remote administration confirmed:</strong> Every command on this page was executed via SSH from Windows PowerShell. The ubuntu@server prompt visible in all screenshots confirms remote execution.
+      <strong>Monitor result:</strong> Successfully collected all metrics remotely. SSH: active, UFW: active, fail2ban: active, AppArmor: active. CPU 99% idle, Memory 531MB/3.3GB used at baseline.
     </div>
   </div>
 
   <div class="card">
-    <h2>📝 Week 4 Reflection</h2>
-    <p style="font-size:0.9rem;">This week marked the transition from planning to implementation. Configuring SSH key-based authentication required careful sequencing — the key must be copied to the server before disabling password authentication, otherwise access is permanently lost.</p>
+    <h2>📝 Week 5 Reflection</h2>
+    <p style="font-size:0.9rem;">This week involved the most complex configuration so far. The layered security approach — firewall, SSH hardening, AppArmor, and fail2ban — demonstrates defence in depth: each control provides protection independently, so even if one fails, others remain effective.</p>
     <br>
-    <p style="font-size:0.9rem;">The UFW firewall configuration highlighted an important trade-off: restricting SSH to only the workstation subnet (192.168.1.0/24) significantly reduces attack surface but means the server cannot be accessed from any other location. This is acceptable for a coursework environment but would require a VPN solution in production.</p>
+    <p style="font-size:0.9rem;">Writing the shell scripts required understanding both bash scripting and the SSH command execution model. The monitor script executes commands remotely by passing them as arguments to SSH — a powerful technique used extensively in DevOps automation tools like Ansible.</p>
     <br>
-    <p style="font-size:0.9rem;"><strong>Challenge encountered:</strong> Initial key copy command failed because it was run inside the SSH session rather than on Windows. The fix was to exit the server session first and run the command from Windows PowerShell — a good lesson in understanding which machine commands run on.</p>
+    <p style="font-size:0.9rem;"><strong>Challenge encountered:</strong> The monitor script failed initially due to invisible encoding characters from copy-pasting into a terminal. The fix was creating the file using Notepad with UTF-8 encoding and saving as "All Files" — a lesson in the importance of file encoding in shell scripting.</p>
+    <br>
+    <p style="font-size:0.9rem;"><strong>Trade-off identified:</strong> AppArmor adds per-syscall checking overhead and fail2ban continuously monitors log files. These security costs will be quantified in Week 6 performance testing.</p>
   </div>
 
   <div class="pagination">
-    <a href="week3.html">← Week 3 — Application Selection</a>
-    <a href="week5.html">Week 5 — Advanced Security →</a>
+    <a href="week4.html">← Week 4 — Initial Security</a>
+    <a href="week6.html">Week 6 — Performance Analysis →</a>
   </div>
 
 </div>
