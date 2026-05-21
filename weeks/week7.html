@@ -262,13 +262,13 @@ ubuntu@server:~$ sudo systemctl restart ssh</pre>
 
   <div class="card">
     <h2>📝 Week 7 Reflection &amp; Overall Conclusions</h2>
-    <p style="font-size:0.9rem;">The Lynis audit provided an objective measure of security hardening. The initial score of 66 reflected strong baseline security already implemented in Weeks 4 and 5. The score was partly limited by Ubuntu 26.04 not yet being in Lynis's EOL database — flagged as a notice rather than a warning. Remediation through sysctl hardening, rkhunter installation, and SSH login banner improved the score to 68.</p>
+    <p style="font-size:0.9rem;">Lynis audit gave us an objective metric for security hardening, with an initial score of 66 which indicated very good security already implemented in Weeks 4 and 5. However, the score could have been improved due to Ubuntu 26.04 not being included in the EOL list of Lynis yet — this was mentioned as a notice, not a warning. Sysctl hardening, installation of rkhunter and SSH login banner helped increase the score to 68.</p>
     <br>
-    <p style="font-size:0.9rem;">The nmap scan confirmed the firewall is functioning exactly as designed — only port 22 visible from outside, all other ports filtered. Notably, initial nmap scans returned "host seems down" without the -Pn flag, proving UFW blocks even ICMP ping probes. This demonstrates a higher level of security than the assignment requires.</p>
+    <p style="font-size:0.9rem;">Nmap scan demonstrated that the firewall is working as intended — only port 22 is open from outside, with all other ports being filtered. Moreover, first nmap scan results showed "host seems down" even without -Pn option, thus indicating that UFW can block even ICMP ping probe. It is an even greater level of security than assignment required.</p>
     <br>
-    <p style="font-size:0.9rem;"><strong>Key learning across 7 weeks:</strong> Security and performance exist in genuine tension. AppArmor and fail2ban add overhead but the performance testing in Week 6 showed this was negligible at baseline CPU levels. Professional server administration requires balancing these trade-offs with quantitative evidence rather than assumption.</p>
+    <p style="font-size:0.9rem;"><strong>Key learning across 7 weeks:</strong> There is genuine conflict between security and performance. While both of these systems are needed and important, we can see that such solutions as AppArmor and fail2ban have some overhead, though testing done in Week 6 proved that it is insignificant for our baseline CPUs.</p>
     <br>
-    <p style="font-size:0.9rem;"><strong>Employability reflection:</strong> Every skill in this coursework — SSH administration, firewall configuration, shell scripting, performance benchmarking, and security auditing — maps directly to daily tasks performed by cloud engineers, DevOps engineers, and security professionals. Ubuntu Server with SSH-only access is identical to how AWS EC2, Azure VMs, and Google Cloud instances are administered in production.</p>
+    <p style="font-size:0.9rem;"><strong>Employability reflection:</strong> The skills I learned during this assignment course, including SSH administration, firewall setup, shell scripting, benchmarking, and auditing, all correspond directly to the work carried out on a day-to-day basis by cloud engineers, DevOps engineers, and security experts. Ubuntu Server running SSH only is exactly how AWS EC2, Azure Virtual Machines, and Google Cloud instances are managed in production environments.</p>
   </div>
 
   <div class="pagination">
