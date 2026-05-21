@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CMPN202 OS Journal | [YOUR-STUDENT-ID]</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="brand">⚙️ CMPN202 OS Journal</a>
+  <ul class="nav-links">
+    <li><a href="index.html" class="active">Home</a></li>
+    <li><a href="weeks/week1.html">W1</a></li>
+    <li><a href="weeks/week2.html">W2</a></li>
+    <li><a href="weeks/week3.html">W3</a></li>
+    <li><a href="weeks/week4.html">W4</a></li>
+    <li><a href="weeks/week5.html">W5</a></li>
+    <li><a href="weeks/week6.html">W6</a></li>
+    <li><a href="weeks/week7.html">W7</a></li>
+  </ul>
+</nav>
+
+<div class="hero">
+  <h1>CMPN202 Operating Systems</h1>
+  <p>A 7-week technical journal documenting Linux server configuration, security hardening, and performance analysis.</p>
+  <div class="meta">
+    <span><strong>[YOUR-STUDENT-ID]</strong>Student ID</span>
+    <span><strong>BSc Computer Science</strong>Programme</span>
+    <span><strong>Level 5</strong>Module Level</span>
+    <span><strong>2025/26</strong>Academic Year</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="card">
+    <h2>📋 Project Overview</h2>
+    <p>This technical journal documents my journey implementing, securing, and evaluating a Linux server operating system across 7 weeks. The project involves deploying a headless Ubuntu Server 26.04 LTS, administering it exclusively via SSH from a Windows workstation, implementing industry-standard security controls, and conducting systematic performance analysis.</p>
+    <br>
+    <p>The dual-system architecture mirrors real-world cloud infrastructure, developing authentic command-line proficiency and professional remote administration skills.</p>
+  </div>
+
+  <div class="card">
+    <h2>🎯 Learning Outcomes</h2>
+    <div class="grid-2">
+      <div class="lo-item">
+        <strong>LO3 — Security</strong>
+        Assess security vulnerabilities and apply appropriate mechanisms to protect systems from exploits.
+      </div>
+      <div class="lo-item">
+        <strong>LO4 — CLI Proficiency</strong>
+        Demonstrate proficiency with command-line tools for process monitoring, file manipulation, and system configuration.
+      </div>
+      <div class="lo-item">
+        <strong>LO5 — Critical Evaluation</strong>
+        Critically evaluate OS design trade-offs, synthesising knowledge of hardware constraints, performance, and security.
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🖥️ System Architecture</h2>
+    <div class="grid-2">
+      <div>
+        <h3>Server (Ubuntu VM)</h3>
+        <ul style="padding-left:1.25rem; font-size:0.9rem; color:#6c757d;">
+          <li>Ubuntu Server 26.04 LTS (headless)</li>
+          <li>SSH access only — no desktop environment</li>
+          <li>IP Address: 192.168.1.66</li>
+          <li>RAM: 3.3GB | Disk: 25GB</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Workstation (Windows Host)</h3>
+        <ul style="padding-left:1.25rem; font-size:0.9rem; color:#6c757d;">
+          <li>Windows 10/11 host machine</li>
+          <li>PowerShell OpenSSH client</li>
+          <li>VirtualBox for VM management</li>
+          <li>Remote administration via SSH</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📅 Weekly Progress</h2>
+    <table class="week-table">
+      <thead>
+        <tr>
+          <th>Week</th>
+          <th>Phase</th>
+          <th>Topic</th>
+          <th>Key Deliverables</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><a href="weeks/week1.html"><span class="badge badge-week">Week 1</span></a></td>
+          <td>Planning</td>
+          <td>System Planning &amp; Distribution Selection</td>
+          <td>Architecture diagram, distro justification, CLI specs</td>
+          <td><span class="badge badge-progress">In Progress</span></td>
+        </tr>
+        <tr>
+          <td><a href="weeks/week2.html"><span class="badge badge-week">Week 2</span></a></td>
+          <td>Design</td>
+          <td>Security Planning &amp; Testing Methodology</td>
+          <td>Testing plan, security checklist, threat model</td>
+          <td><span class="badge badge-todo">To Do</span></td>
+        </tr>
+        <tr>
+          <td><a href="weeks/week3.html"><span class="badge badge-week">Week 3</span></a></td>
+          <td>Selection</td>
+          <td>Application Selection for Performance Testing</td>
+          <td>App matrix, installation docs, monitoring strategy</td>
+          <td><span class="badge badge-todo">To Do</span></td>
+        </tr>
+        <tr>
+          <td><a href="weeks/week4.html"><span class="badge badge-week">Week 4</span></a></td>
+          <td>Implementation</td>
+          <td>Initial Security &amp; System Configuration</td>
+          <td>SSH config, firewall rules, user management</td>
+          <td><span class="badge badge-todo">To Do</span></td>
+        </tr>
+        <tr>
+          <td><a href="weeks/week5.html"><span class="badge badge-week">Week 5</span></a></td>
+          <td>Advanced</td>
+          <td>Advanced Security &amp; Monitoring Infrastructure</td>
+          <td>AppArmor, fail2ban, monitoring scripts</td>
+          <td><span class="badge badge-todo">To Do</span></td>
+        </tr>
+        <tr>
+          <td><a href="weeks/week6.html"><span class="badge badge-week">Week 6</span></a></td>
+          <td>Testing</td>
+          <td>Performance Evaluation &amp; Analysis</td>
+          <td>Performance data, graphs, optimisation results</td>
+          <td><span class="badge badge-todo">To Do</span></td>
+        </tr>
+        <tr>
+          <td><a href="weeks/week7.html"><span class="badge badge-week">Week 7</span></a></td>
+          <td>Audit</td>
+          <td>Security Audit &amp; System Evaluation</td>
+          <td>Lynis report, nmap results, risk assessment</td>
+          <td><span class="badge badge-todo">To Do</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout callout-info">
+    <strong>Note:</strong> This journal is updated weekly as practical work is completed. All command screenshots show <code>ubuntu@server</code> prompts as required. AI tool usage is acknowledged and cited in accordance with university policy.
+  </div>
+
+</div>
+
+<footer>
+  <strong>CMPN202 Operating Systems Coursework</strong> &nbsp;|&nbsp; BSc Computer Science &nbsp;|&nbsp; University of Roehampton &nbsp;|&nbsp; 2025/26
+</footer>
+
+</body>
+</html>
