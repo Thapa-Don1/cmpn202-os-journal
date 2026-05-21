@@ -37,9 +37,9 @@
         <tr><th>Deliverable</th><th>Status</th></tr>
       </thead>
       <tbody>
-        <tr><td>Performance Testing Plan</td><td><span class="badge badge-todo">To Do</span></td></tr>
-        <tr><td>Security Configuration Checklist</td><td><span class="badge badge-todo">To Do</span></td></tr>
-        <tr><td>Threat Model (3+ threats)</td><td><span class="badge badge-todo">To Do</span></td></tr>
+        <tr><td>Performance Testing Plan</td><td><span class="badge badge-done">Done</span></td></tr>
+        <tr><td>Security Configuration Checklist</td><td><span class="badge badge-done">Done</span></td></tr>
+        <tr><td>Threat Model (3+ threats)</td><td><span class="badge badge-done">Done</span></td></tr>
       </tbody>
     </table>
   </div>
@@ -124,11 +124,11 @@
         <tr><th>Control</th><th>Setting</th><th>Implemented</th></tr>
       </thead>
       <tbody>
-        <tr><td>Key-based authentication</td><td>Generate RSA/ED25519 keypair</td><td><span class="badge badge-todo">Week 4</span></td></tr>
-        <tr><td>Disable password authentication</td><td>PasswordAuthentication no</td><td><span class="badge badge-todo">Week 4</span></td></tr>
-        <tr><td>Disable root login</td><td>PermitRootLogin no</td><td><span class="badge badge-todo">Week 4</span></td></tr>
-        <tr><td>Change default SSH port</td><td>Port 2222 (optional)</td><td><span class="badge badge-todo">Week 4</span></td></tr>
-        <tr><td>Limit SSH users</td><td>AllowUsers ubuntu</td><td><span class="badge badge-todo">Week 4</span></td></tr>
+        <tr><td>Key-based authentication</td><td>Generate RSA/ED25519 keypair</td><td><span class="badge badge-done">Week 4</span></td></tr>
+        <tr><td>Disable password authentication</td><td>PasswordAuthentication no</td><td><span class="badge badge-done">Week 4</span></td></tr>
+        <tr><td>Disable root login</td><td>PermitRootLogin no</td><td><span class="badge badge-done">Week 4</span></td></tr>
+        <tr><td>Change default SSH port</td><td>Port 2222 (optional)</td><td><span class="badge badge-done">Week 4</span></td></tr>
+        <tr><td>Limit SSH users</td><td>AllowUsers ubuntu</td><td><span class="badge badge-done">Week 4</span></td></tr>
       </tbody>
     </table>
 
@@ -138,10 +138,10 @@
         <tr><th>Rule</th><th>Action</th><th>Implemented</th></tr>
       </thead>
       <tbody>
-        <tr><td>Default incoming</td><td>DENY all</td><td><span class="badge badge-todo">Week 4</span></td></tr>
-        <tr><td>Default outgoing</td><td>ALLOW all</td><td><span class="badge badge-todo">Week 4</span></td></tr>
-        <tr><td>SSH from workstation only</td><td>ALLOW 192.168.1.x port 22</td><td><span class="badge badge-todo">Week 4</span></td></tr>
-        <tr><td>Enable UFW</td><td>ufw enable</td><td><span class="badge badge-todo">Week 4</span></td></tr>
+        <tr><td>Default incoming</td><td>DENY all</td><td><span class="badge badge-done">Week 4</span></td></tr>
+        <tr><td>Default outgoing</td><td>ALLOW all</td><td><span class="badge badge-done">Week 4</span></td></tr>
+        <tr><td>SSH from workstation only</td><td>ALLOW 192.168.1.x port 22</td><td><span class="badge badge-done">Week 4</span></td></tr>
+        <tr><td>Enable UFW</td><td>ufw enable</td><td><span class="badge badge-done">Week 4</span></td></tr>
       </tbody>
     </table>
 
@@ -151,11 +151,11 @@
         <tr><th>Control</th><th>Tool</th><th>Implemented</th></tr>
       </thead>
       <tbody>
-        <tr><td>Mandatory Access Control</td><td>AppArmor</td><td><span class="badge badge-todo">Week 5</span></td></tr>
-        <tr><td>Intrusion Detection</td><td>fail2ban</td><td><span class="badge badge-todo">Week 5</span></td></tr>
-        <tr><td>Automatic Security Updates</td><td>unattended-upgrades</td><td><span class="badge badge-todo">Week 5</span></td></tr>
-        <tr><td>Security Baseline Script</td><td>security-baseline.sh</td><td><span class="badge badge-todo">Week 5</span></td></tr>
-        <tr><td>Remote Monitoring Script</td><td>monitor-server.sh</td><td><span class="badge badge-todo">Week 5</span></td></tr>
+        <tr><td>Mandatory Access Control</td><td>AppArmor</td><td><span class="badge badge-done">Week 5</span></td></tr>
+        <tr><td>Intrusion Detection</td><td>fail2ban</td><td><span class="badge badge-done">Week 5</span></td></tr>
+        <tr><td>Automatic Security Updates</td><td>unattended-upgrades</td><td><span class="badge badge-done">Week 5</span></td></tr>
+        <tr><td>Security Baseline Script</td><td>security-baseline.sh</td><td><span class="badge badge-done">Week 5</span></td></tr>
+        <tr><td>Remote Monitoring Script</td><td>monitor-server.sh</td><td><span class="badge badge-done">Week 5</span></td></tr>
       </tbody>
     </table>
 
@@ -166,9 +166,9 @@
       </thead>
       <tbody>
         <tr><td>Non-root admin user</td><td>User 'ubuntu' with sudo</td><td><span class="badge badge-done">Done</span></td></tr>
-        <tr><td>Disable direct root SSH</td><td>PermitRootLogin no</td><td><span class="badge badge-todo">Week 4</span></td></tr>
-        <tr><td>Sudo logging</td><td>Review /var/log/auth.log</td><td><span class="badge badge-todo">Week 4</span></td></tr>
-        <tr><td>Password policy</td><td>Strong password enforced</td><td><span class="badge badge-todo">Week 4</span></td></tr>
+        <tr><td>Disable direct root SSH</td><td>PermitRootLogin no</td><td><span class="badge badge-done">Week 4</span></td></tr>
+        <tr><td>Sudo logging</td><td>Review /var/log/auth.log</td><td><span class="badge badge-done">Week 4</span></td></tr>
+        <tr><td>Password policy</td><td>Strong password enforced</td><td><span class="badge badge-done">Week 4</span></td></tr>
       </tbody>
     </table>
   </div>
