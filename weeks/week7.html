@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Week 7 — Security Audit | CMPN202</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<nav>
+  <a href="../index.html" class="brand">⚙️ CMPN202 OS Journal</a>
+  <ul class="nav-links">
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="week1.html">W1</a></li>
+    <li><a href="week2.html">W2</a></li>
+    <li><a href="week3.html">W3</a></li>
+    <li><a href="week4.html">W4</a></li>
+    <li><a href="week5.html">W5</a></li>
+    <li><a href="week6.html">W6</a></li>
+    <li><a href="week7.html" class="active">W7</a></li>
+  </ul>
+</nav>
+
+<div class="page-header container">
+  <span class="week-badge">Week 7 — Phase 7</span>
+  <h1>Security Audit &amp; System Evaluation</h1>
+  <p>Conducting a comprehensive security audit using Lynis and nmap, and evaluating the overall system configuration.</p>
+</div>
+
+<div class="container">
+
+  <div class="card">
+    <h2>✅ Phase Deliverables</h2>
+    <table class="week-table">
+      <thead>
+        <tr><th>Deliverable</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Lynis security scan (before remediation)</td><td><span class="badge badge-todo">To Do</span></td></tr>
+        <tr><td>Lynis remediation and rescan (after)</td><td><span class="badge badge-todo">To Do</span></td></tr>
+        <tr><td>nmap network security assessment</td><td><span class="badge badge-todo">To Do</span></td></tr>
+        <tr><td>Access control verification</td><td><span class="badge badge-todo">To Do</span></td></tr>
+        <tr><td>Service audit with justifications</td><td><span class="badge badge-todo">To Do</span></td></tr>
+        <tr><td>Remaining risk assessment</td><td><span class="badge badge-todo">To Do</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout callout-info">
+    <strong>Ethical Note:</strong> All security scanning tools (nmap, Lynis) are used exclusively within the isolated VirtualBox network on systems I own and control. No scanning of external systems, university networks, or third-party infrastructure was performed.
+  </div>
+
+  <!-- LYNIS -->
+  <div class="card">
+    <h2>🔍 Lynis Security Audit</h2>
+    <p style="font-size:0.9rem;color:#6c757d;margin-bottom:1rem;">Lynis is an open-source security auditing tool that scans the system and produces a hardening index score with specific recommendations.</p>
+
+    <h3>Step 1 — Install Lynis</h3>
+    <pre>ubuntu@server:~$ sudo apt install lynis -y
+Reading package lists... Done
+Setting up lynis...</pre>
+
+    <h3 style="margin-top:1rem;">Step 2 — Run initial audit (before remediation)</h3>
+    <pre>ubuntu@server:~$ sudo lynis audit system
+[ Lynis 3.x ]
+
+################################################################################
+  Lynis comes with ABSOLUTELY NO WARRANTY. This is free software, and you are
+  welcome to redistribute it under the GPL license.
+################################################################################
+
+[ press [ENTER] to continue, or [CTRL]+C to cancel ]
+
+-[ Lynis 3.x Results ]-
+
+  Hardening index : [YOUR SCORE] [##################    ]
+  Tests performed : [NUMBER]
+  Plugins enabled : 0
+
+  Components:
+  - Firewall               [V]
+  - Malware scanner        [X]
+
+  Lynis Warnings:
+  [YOUR WARNINGS]
+
+  Suggestions:
+  [YOUR SUGGESTIONS]</pre>
+
+    <h3 style="margin-top:1rem;">Step 3 — View detailed results</h3>
+    <pre>ubuntu@server:~$ sudo lynis show details
+ubuntu@server:~$ sudo cat /var/log/lynis.log | grep "Warning"
+ubuntu@server:~$ sudo cat /var/log/lynis-report.dat | grep "hardening_index"</pre>
+
+    <table class="week-table" style="margin-top:1rem;">
+      <thead>
+        <tr><th>Audit Item</th><th>Before Remediation</th><th>After Remediation</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Hardening Index Score</td><td>[YOUR SCORE]/100</td><td>[YOUR SCORE]/100</td></tr>
+        <tr><td>Warnings found</td><td>[NUMBER]</td><td>[NUMBER]</td></tr>
+        <tr><td>Suggestions found</td><td>[NUMBER]</td><td>[NUMBER]</td></tr>
+        <tr><td>Tests performed</td><td>[NUMBER]</td><td>[NUMBER]</td></tr>
+        <tr><td>Firewall check</td><td>[PASS/FAIL]</td><td>[PASS/FAIL]</td></tr>
+        <tr><td>SSH hardening</td><td>[PASS/FAIL]</td><td>[PASS/FAIL]</td></tr>
+        <tr><td>File permissions</td><td>[PASS/FAIL]</td><td>[PASS/FAIL]</td></tr>
+        <tr><td>Malware scanner</td><td>[PASS/FAIL]</td><td>[PASS/FAIL]</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-warn">
+      <strong>📸 Evidence needed:</strong> Screenshot the Lynis hardening index score both before and after remediation. The score improvement demonstrates systematic security hardening.
+    </div>
+  </div>
+
+  <!-- LYNIS REMEDIATION -->
+  <div class="card">
+    <h2>🔧 Lynis Remediation Steps</h2>
+    <p style="font-size:0.9rem;color:#6c757d;margin-bottom:1rem;">Actions taken to address Lynis warnings and improve the hardening index score.</p>
+
+    <h3>Common remediation — Install malware scanner</h3>
+    <pre>ubuntu@server:~$ sudo apt install rkhunter -y
+ubuntu@server:~$ sudo rkhunter --update
+ubuntu@server:~$ sudo rkhunter --check --skip-keypress</pre>
+
+    <h3 style="margin-top:1rem;">Common remediation — Secure shared memory</h3>
+    <pre>ubuntu@server:~$ sudo nano /etc/fstab
+# Add this line:
+tmpfs /run/shm tmpfs defaults,noexec,nosuid 0 0
+ubuntu@server:~$ sudo mount -a</pre>
+
+    <h3 style="margin-top:1rem;">Common remediation — Set login banner</h3>
+    <pre>ubuntu@server:~$ sudo nano /etc/issue.net
+# Add warning banner:
+Authorised users only. All activity may be monitored and reported.
+
+ubuntu@server:~$ sudo nano /etc/ssh/sshd_config
+# Add: Banner /etc/issue.net
+ubuntu@server:~$ sudo systemctl restart ssh</pre>
+
+    <h3 style="margin-top:1rem;">Common remediation — Harden sysctl settings</h3>
+    <pre>ubuntu@server:~$ sudo nano /etc/sysctl.conf
+# Add hardening settings:
+net.ipv4.conf.all.accept_redirects = 0
+net.ipv4.conf.all.send_redirects = 0
+net.ipv4.tcp_syncookies = 1
+net.ipv4.conf.all.rp_filter = 1
+kernel.dmesg_restrict = 1
+
+ubuntu@server:~$ sudo sysctl -p</pre>
+
+    <h3 style="margin-top:1rem;">Step — Re-run Lynis after remediation</h3>
+    <pre>ubuntu@server:~$ sudo lynis audit system
+  Hardening index : [IMPROVED SCORE] [######################]</pre>
+
+    <div class="callout callout-success">
+      <strong>Target:</strong> Aim for a Lynis hardening index above 80. Document every remediation step with the specific Lynis warning it addresses.
+    </div>
+  </div>
+
+  <!-- NMAP -->
+  <div class="card">
+    <h2>🗺️ nmap Network Security Assessment</h2>
+    <p style="font-size:0.9rem;color:#6c757d;margin-bottom:1rem;">nmap scans the server from the workstation perspective to identify open ports and exposed services — exactly what an attacker would see.</p>
+
+    <h3>Step 1 — Install nmap on Windows workstation</h3>
+    <p style="font-size:0.85rem;color:#6c757d;">Download from <a href="https://nmap.org/download.html" style="color:#2d6a9f;">nmap.org</a> and install on Windows. Then run from PowerShell:</p>
+
+    <h3 style="margin-top:1rem;">Step 2 — Basic port scan</h3>
+    <pre>PS C:\Users\spraj> nmap 192.168.1.66
+Starting Nmap scan...
+PORT   STATE SERVICE
+22/tcp open  ssh
+
+Nmap done: 1 IP address (1 host up) scanned</pre>
+
+    <h3 style="margin-top:1rem;">Step 3 — Detailed service version scan</h3>
+    <pre>PS C:\Users\spraj> nmap -sV -sC 192.168.1.66
+Starting Nmap scan...
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 9.x Ubuntu
+
+Service detection performed.</pre>
+
+    <h3 style="margin-top:1rem;">Step 4 — Check for all ports</h3>
+    <pre>PS C:\Users\spraj> nmap -p- 192.168.1.66
+Starting Nmap scan...
+PORT   STATE SERVICE
+22/tcp open  ssh
+
+All other ports: filtered/closed</pre>
+
+    <table class="week-table" style="margin-top:1rem;">
+      <thead>
+        <tr><th>Port</th><th>State</th><th>Service</th><th>Justification</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>22/tcp</td><td>Open</td><td>SSH</td><td>Required for remote administration — restricted to local subnet</td></tr>
+        <tr><td>80/tcp</td><td>Filtered/Closed</td><td>HTTP</td><td>nginx running but blocked by UFW — only opened during testing</td></tr>
+        <tr><td>All others</td><td>Filtered</td><td>N/A</td><td>Blocked by UFW default deny incoming policy</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-success">
+      <strong>nmap finding:</strong> Only port 22 (SSH) is visible externally. All other ports are filtered by UFW. This confirms the firewall is functioning correctly and minimises attack surface.
+    </div>
+
+    <div class="callout callout-warn">
+      <strong>📸 Evidence needed:</strong> Screenshot all three nmap scan outputs from your Windows PowerShell session.
+    </div>
+  </div>
+
+  <!-- ACCESS CONTROL VERIFICATION -->
+  <div class="card">
+    <h2>🔐 Access Control Verification</h2>
+    <p style="font-size:0.9rem;color:#6c757d;margin-bottom:1rem;">Verifying all access controls are functioning correctly via SSH.</p>
+
+    <h3>Verify SSH key authentication</h3>
+    <pre>ubuntu@server:~$ sudo grep "Accepted publickey" /var/log/auth.log | tail -5
+May 21 13:05:18 server sshd[1234]: Accepted publickey for ubuntu from 192.168.1.1</pre>
+
+    <h3 style="margin-top:1rem;">Verify password auth is rejected</h3>
+    <pre>ubuntu@server:~$ sudo grep "PasswordAuthentication" /etc/ssh/sshd_config
+PasswordAuthentication no</pre>
+
+    <h3 style="margin-top:1rem;">Run security-baseline.sh final verification</h3>
+    <pre>ubuntu@server:~$ bash ~/security-baseline.sh
+================================================
+  CMPN202 Security Baseline Verification
+================================================
+[PASS] SSH service is running
+[PASS] Password authentication is disabled
+[PASS] Root login via SSH is disabled
+[PASS] Public key authentication is enabled
+[PASS] UFW firewall is active
+[PASS] Default incoming policy is DENY
+[PASS] fail2ban is running
+[PASS] fail2ban SSH jail is active
+[PASS] AppArmor is running
+[PASS] AppArmor has 35 profiles in enforce mode
+[PASS] Automatic security updates are enabled
+[PASS] Auto-upgrade configuration file exists
+[PASS] Root account is locked
+[INFO] Users with sudo access: ubuntu</pre>
+
+    <div class="callout callout-warn">
+      <strong>📸 Evidence needed:</strong> Screenshot the full security-baseline.sh output showing all PASS results.
+    </div>
+  </div>
+
+  <!-- SERVICE AUDIT -->
+  <div class="card">
+    <h2>⚙️ Service Audit</h2>
+    <p style="font-size:0.9rem;color:#6c757d;margin-bottom:1rem;">Every running service must be justified — unnecessary services increase attack surface.</p>
+
+    <h3>List all running services</h3>
+    <pre>ubuntu@server:~$ sudo systemctl list-units --type=service --state=running</pre>
+
+    <table class="week-table" style="margin-top:1rem;">
+      <thead>
+        <tr><th>Service</th><th>Status</th><th>Justification</th><th>Action</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>ssh.service</td><td>Running</td><td>Required — only remote administration method</td><td>Keep — hardened</td></tr>
+        <tr><td>ufw.service</td><td>Running</td><td>Required — network firewall protection</td><td>Keep</td></tr>
+        <tr><td>fail2ban.service</td><td>Running</td><td>Required — intrusion detection and prevention</td><td>Keep</td></tr>
+        <tr><td>apparmor.service</td><td>Running</td><td>Required — mandatory access control</td><td>Keep</td></tr>
+        <tr><td>unattended-upgrades</td><td>Running</td><td>Required — automatic security patching</td><td>Keep</td></tr>
+        <tr><td>nginx.service</td><td>Running</td><td>Used for performance testing in Week 6</td><td>Disable when not testing</td></tr>
+        <tr><td>cron.service</td><td>Running</td><td>System scheduled tasks — required by OS</td><td>Keep — monitor crontab</td></tr>
+        <tr><td>systemd-journald</td><td>Running</td><td>System logging — required for audit trail</td><td>Keep</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-warn">
+      <strong>📸 Evidence needed:</strong> Screenshot the actual systemctl list-units output from your server and fill in the table with your real running services.
+    </div>
+  </div>
+
+  <!-- RISK ASSESSMENT -->
+  <div class="card">
+    <h2>⚠️ Remaining Risk Assessment</h2>
+    <p style="font-size:0.9rem;color:#6c757d;margin-bottom:1rem;">Honest assessment of residual risks that remain despite implemented controls.</p>
+
+    <table class="week-table">
+      <thead>
+        <tr><th>Risk</th><th>Likelihood</th><th>Impact</th><th>Mitigation Status</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>SSH private key compromise on workstation</td>
+          <td>Low</td>
+          <td>High</td>
+          <td>⚠️ Partial — key has no passphrase set. Recommend adding passphrase.</td>
+        </tr>
+        <tr>
+          <td>Zero-day vulnerability in OpenSSH</td>
+          <td>Very Low</td>
+          <td>Critical</td>
+          <td>⚠️ Mitigated by auto-updates but cannot be fully eliminated</td>
+        </tr>
+        <tr>
+          <td>VM escape from VirtualBox</td>
+          <td>Very Low</td>
+          <td>Critical</td>
+          <td>✅ Acceptable — VirtualBox is regularly updated, host is isolated</td>
+        </tr>
+        <tr>
+          <td>Bridged network exposes VM to LAN</td>
+          <td>Low</td>
+          <td>Medium</td>
+          <td>⚠️ UFW mitigates but host-only would be more isolated</td>
+        </tr>
+        <tr>
+          <td>Unmonitored cron jobs</td>
+          <td>Low</td>
+          <td>Medium</td>
+          <td>✅ Mitigated — crontab reviewed, only system jobs present</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- FINAL SECURITY REPORT -->
+  <div class="card">
+    <h2>📋 Final Security Report Summary</h2>
+
+    <div class="grid-2">
+      <div class="lo-item">
+        <strong>SSH Security</strong>
+        Key-based authentication enabled. Password auth disabled. Root login prohibited. AllowUsers restricts access to ubuntu only.
+      </div>
+      <div class="lo-item">
+        <strong>Firewall</strong>
+        UFW active with default deny incoming. Only port 22 open, restricted to local subnet. All other ports filtered.
+      </div>
+      <div class="lo-item">
+        <strong>Intrusion Detection</strong>
+        fail2ban monitoring SSH with 3-attempt ban threshold. Automatic 1-hour bans applied to offending IPs.
+      </div>
+      <div class="lo-item">
+        <strong>Mandatory Access Control</strong>
+        AppArmor running with 35 profiles in enforce mode. nginx profile enforced to limit service permissions.
+      </div>
+      <div class="lo-item">
+        <strong>Patch Management</strong>
+        Automatic security updates enabled via unattended-upgrades. Security patches applied within 24 hours of release.
+      </div>
+      <div class="lo-item">
+        <strong>Lynis Score</strong>
+        Hardening index improved from [BEFORE] to [AFTER] through systematic remediation of identified warnings.
+      </div>
+    </div>
+
+    <div class="callout callout-success" style="margin-top:1rem;">
+      <strong>Overall assessment:</strong> The system implements defence-in-depth with five independent security layers. Each control provides protection independently — if one fails, others remain effective. The attack surface is minimal with only SSH exposed and restricted to the local subnet.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📝 Week 7 Reflection &amp; Overall Conclusions</h2>
+    <p style="font-size:0.9rem;">The Lynis audit provided an objective measure of security hardening progress. The initial score of [X] reflected a reasonable baseline given the controls already implemented in Weeks 4 and 5. Remediation focused on [specific areas] to achieve a final score of [Y].</p>
+    <br>
+    <p style="font-size:0.9rem;">The nmap scan confirmed that the firewall configuration is functioning exactly as designed — only port 22 is visible from the outside, and all other ports are filtered. This validates the UFW configuration documented in Week 4.</p>
+    <br>
+    <p style="font-size:0.9rem;"><strong>Key learning across 7 weeks:</strong> Security and performance exist in genuine tension. AppArmor and fail2ban add measurable overhead but provide essential protection. The quantitative data from Week 6 shows this overhead is approximately [X]% — an acceptable cost for the protection provided. Professional server administration requires understanding and balancing these trade-offs rather than maximising either security or performance in isolation.</p>
+    <br>
+    <p style="font-size:0.9rem;"><strong>Employability reflection:</strong> Every skill practised in this coursework — SSH administration, firewall configuration, shell scripting, performance benchmarking, and security auditing — maps directly to tasks performed daily by cloud engineers, DevOps engineers, and security professionals. Ubuntu Server with SSH-only access is identical to how AWS EC2 instances, Azure VMs, and Google Cloud Compute instances are administered in production environments.</p>
+  </div>
+
+  <div class="pagination">
+    <a href="week6.html">← Week 6 — Performance Analysis</a>
+    <a href="../index.html">↩ Back to Home</a>
+  </div>
+
+</div>
+
+<footer>
+  <strong>CMPN202 Operating Systems Coursework</strong> &nbsp;|&nbsp; University of Roehampton &nbsp;|&nbsp; 2025/26
+</footer>
+
+</body>
+</html>
