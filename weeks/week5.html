@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Week 5 — Advanced Security | CMPN202</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<nav>
+  <a href="../index.html" class="brand">⚙️ CMPN202 OS Journal</a>
+  <ul class="nav-links">
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="week1.html">W1</a></li>
+    <li><a href="week2.html">W2</a></li>
+    <li><a href="week3.html">W3</a></li>
+    <li><a href="week4.html">W4</a></li>
+    <li><a href="week5.html" class="active">W5</a></li>
+    <li><a href="week6.html">W6</a></li>
+    <li><a href="week7.html">W7</a></li>
+  </ul>
+</nav>
+
+<div class="page-header container">
+  <span class="week-badge">Week 5 — Phase 5</span>
+  <h1>Advanced Security &amp; Monitoring Infrastructure</h1>
+  <p>Implementing AppArmor, fail2ban, automatic updates, and developing security and monitoring scripts.</p>
+</div>
+
+<div class="container">
+
+  <div class="card">
+    <h2>✅ Phase Deliverables</h2>
+    <table class="week-table">
+      <thead>
+        <tr><th>Deliverable</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>AppArmor access control configured and documented</td><td><span class="badge badge-todo">To Do</span></td></tr>
+        <tr><td>Automatic security updates configured</td><td><span class="badge badge-todo">To Do</span></td></tr>
+        <tr><td>fail2ban intrusion detection configured</td><td><span class="badge badge-todo">To Do</span></td></tr>
+        <tr><td>security-baseline.sh script created</td><td><span class="badge badge-todo">To Do</span></td></tr>
+        <tr><td>monitor-server.sh script created</td><td><span class="badge badge-todo">To Do</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- APPARMOR -->
+  <div class="card">
+    <h2>🛡️ AppArmor — Mandatory Access Control</h2>
+    <p style="font-size:0.9rem;color:#6c757d;margin-bottom:1rem;">AppArmor confines programs to a limited set of resources using per-program profiles. Even if a service is compromised, AppArmor limits what damage it can do.</p>
+
+    <h3>Step 1 — Verify AppArmor is installed and running</h3>
+    <pre>ubuntu@server:~$ sudo systemctl status apparmor
+● apparmor.service - Load AppArmor profiles
+     Loaded: loaded (/usr/lib/systemd/system/apparmor.service; enabled)
+     Active: active (exited)
+
+ubuntu@server:~$ sudo aa-status
+apparmor module is loaded.
+35 profiles are loaded.
+35 profiles are in enforce mode.
+0 profiles are in complain mode.
+0 processes have profiles defined.</pre>
+
+    <h3 style="margin-top:1rem;">Step 2 — Install AppArmor utilities</h3>
+    <pre>ubuntu@server:~$ sudo apt install apparmor-utils apparmor-profiles -y
+Reading package lists... Done
+Setting up apparmor-utils...
+Setting up apparmor-profiles...</pre>
+
+    <h3 style="margin-top:1rem;">Step 3 — Check nginx AppArmor profile</h3>
+    <pre>ubuntu@server:~$ sudo aa-status | grep nginx
+ubuntu@server:~$ ls /etc/apparmor.d/ | grep nginx
+usr.sbin.nginx
+
+ubuntu@server:~$ sudo aa-enforce /etc/apparmor.d/usr.sbin.nginx
+Setting /etc/apparmor.d/usr.sbin.nginx to enforce mode.</pre>
+
+    <h3 style="margin-top:1rem;">Step 4 — Verify profiles in enforce mode</h3>
+    <pre>ubuntu@server:~$ sudo apparmor_status --json | grep enforce
+ubuntu@server:~$ sudo aa-status | grep "enforce mode"
+35 profiles are in enforce mode.</pre>
+
+    <div class="callout callout-success">
+      <strong>AppArmor outcome:</strong> 35 profiles loaded and enforcing. nginx profile set to enforce mode, restricting what files and network resources the web server can access even if compromised.
+    </div>
+
+    <div class="callout callout-warn">
+      <strong>📸 Evidence needed:</strong> Screenshot <code>sudo aa-status</code> output showing loaded profiles and enforce mode count.
+    </div>
+  </div>
+
+  <!-- AUTOMATIC UPDATES -->
+  <div class="card">
+    <h2>🔄 Automatic Security Updates</h2>
+    <p style="font-size:0.9rem;color:#6c757d;margin-bottom:1rem;">Configuring unattended-upgrades to automatically apply security patches — eliminating the risk of unpatched known vulnerabilities.</p>
+
+    <h3>Step 1 — Install unattended-upgrades</h3>
+    <pre>ubuntu@server:~$ sudo apt install unattended-upgrades -y
+Reading package lists... Done
+Setting up unattended-upgrades...</pre>
+
+    <h3 style="margin-top:1rem;">Step 2 — Enable and configure</h3>
+    <pre>ubuntu@server:~$ sudo dpkg-reconfigure --priority=low unattended-upgrades
+# Select YES when prompted to enable automatic updates</pre>
+
+    <h3 style="margin-top:1rem;">Step 3 — Verify configuration</h3>
+    <pre>ubuntu@server:~$ cat /etc/apt/apt.conf.d/20auto-upgrades
+APT::Periodic::Update-Package-Lists "1";
+APT::Periodic::Unattended-Upgrade "1";
+
+ubuntu@server:~$ sudo systemctl status unattended-upgrades
+● unattended-upgrades.service - Unattended Upgrades Shutdown
+     Loaded: loaded (/usr/lib/systemd/system/unattended-upgrades.service)
+     Active: active (running)</pre>
+
+    <h3 style="margin-top:1rem;">Step 4 — Test dry run</h3>
+    <pre>ubuntu@server:~$ sudo unattended-upgrade --dry-run --debug
+Initial blacklisted packages:
+Initial whitelisted packages:
+Starting unattended upgrades script
+Allowed origins are: ['o=Ubuntu,a=resolute-security']
+No packages found that can be upgraded unattended</pre>
+
+    <div class="callout callout-success">
+      <strong>Auto-updates outcome:</strong> Security patches will be applied automatically daily. Package lists updated every 24 hours. Only security-origin packages are applied automatically — reducing risk of breaking changes.
+    </div>
+  </div>
+
+  <!-- FAIL2BAN -->
+  <div class="card">
+    <h2>🚫 fail2ban — Intrusion Detection</h2>
+    <p style="font-size:0.9rem;color:#6c757d;margin-bottom:1rem;">fail2ban monitors log files and automatically bans IP addresses showing signs of brute force or malicious behaviour.</p>
+
+    <h3>Step 1 — Install fail2ban</h3>
+    <pre>ubuntu@server:~$ sudo apt install fail2ban -y
+Reading package lists... Done
+Setting up fail2ban...</pre>
+
+    <h3 style="margin-top:1rem;">Step 2 — Create local configuration</h3>
+    <pre>ubuntu@server:~$ sudo cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
+ubuntu@server:~$ sudo nano /etc/fail2ban/jail.local</pre>
+
+    <h3 style="margin-top:1rem;">Step 3 — Configure SSH jail settings</h3>
+    <pre># /etc/fail2ban/jail.local — SSH jail configuration
+[DEFAULT]
+bantime  = 3600        # Ban for 1 hour
+findtime = 600         # Within 10 minute window
+maxretry = 3           # After 3 failed attempts
+
+[sshd]
+enabled  = true
+port     = ssh
+filter   = sshd
+logpath  = /var/log/auth.log
+maxretry = 3
+bantime  = 3600</pre>
+
+    <h3 style="margin-top:1rem;">Step 4 — Start and enable fail2ban</h3>
+    <pre>ubuntu@server:~$ sudo systemctl enable fail2ban
+ubuntu@server:~$ sudo systemctl start fail2ban
+ubuntu@server:~$ sudo systemctl status fail2ban
+● fail2ban.service - Fail2Ban Service
+     Loaded: loaded (/usr/lib/systemd/system/fail2ban.service; enabled)
+     Active: active (running)</pre>
+
+    <h3 style="margin-top:1rem;">Step 5 — Verify SSH jail is active</h3>
+    <pre>ubuntu@server:~$ sudo fail2ban-client status
+Status
+|- Number of jail: 1
+`- Jail list: sshd
+
+ubuntu@server:~$ sudo fail2ban-client status sshd
+Status for the jail: sshd
+|- Filter
+|  |- Currently failed: 0
+|  |- Total failed:     0
+`- Actions
+   |- Currently banned: 0
+   |- Total banned:     0
+   `- Banned IP list:</pre>
+
+    <div class="callout callout-success">
+      <strong>fail2ban outcome:</strong> SSH jail active. Any IP making 3 failed login attempts within 10 minutes is automatically banned for 1 hour. Bans are written to UFW rules and logged to /var/log/fail2ban.log.
+    </div>
+
+    <div class="callout callout-warn">
+      <strong>📸 Evidence needed:</strong> Screenshot <code>sudo fail2ban-client status sshd</code> showing the jail is active.
+    </div>
+  </div>
+
+  <!-- SECURITY BASELINE SCRIPT -->
+  <div class="card">
+    <h2>📜 security-baseline.sh</h2>
+    <p style="font-size:0.9rem;color:#6c757d;margin-bottom:1rem;">Script runs on the server (executed via SSH) and verifies all security configurations from Phases 4 and 5.</p>
+
+    <h3>Create the script on the server</h3>
+    <pre>ubuntu@server:~$ nano ~/security-baseline.sh</pre>
+
+    <h3 style="margin-top:1rem;">Script content</h3>
+    <pre>#!/bin/bash
+# security-baseline.sh
+# Verifies all security configurations for CMPN202 coursework
+# Run via SSH: ssh ubuntu@192.168.1.66 'bash ~/security-baseline.sh'
+
+# ── Colour codes for readable output ──
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No colour
+
+# ── Helper functions ──
+pass() { echo -e "${GREEN}[PASS]${NC} $1"; }  # Print green PASS message
+fail() { echo -e "${RED}[FAIL]${NC} $1"; }    # Print red FAIL message
+info() { echo -e "${YELLOW}[INFO]${NC} $1"; } # Print yellow INFO message
+
+echo "================================================"
+echo "  CMPN202 Security Baseline Verification"
+echo "  $(date)"
+echo "  Host: $(hostname)"
+echo "================================================"
+echo ""
+
+# ── CHECK 1: SSH service is running ──
+echo "--- SSH Configuration ---"
+if systemctl is-active --quiet ssh; then
+    pass "SSH service is running"
+else
+    fail "SSH service is NOT running"
+fi
+
+# ── CHECK 2: Password authentication is disabled ──
+# Grep the sshd_config file for the setting
+if grep -q "^PasswordAuthentication no" /etc/ssh/sshd_config; then
+    pass "Password authentication is disabled"
+else
+    fail "Password authentication is still enabled - RISK"
+fi
+
+# ── CHECK 3: Root login is disabled ──
+if grep -q "^PermitRootLogin no" /etc/ssh/sshd_config; then
+    pass "Root login via SSH is disabled"
+else
+    fail "Root login is NOT disabled - RISK"
+fi
+
+# ── CHECK 4: Public key authentication is enabled ──
+if grep -q "^PubkeyAuthentication yes" /etc/ssh/sshd_config; then
+    pass "Public key authentication is enabled"
+else
+    fail "Public key authentication is not explicitly enabled"
+fi
+
+echo ""
+echo "--- Firewall Status ---"
+
+# ── CHECK 5: UFW firewall is active ──
+if sudo ufw status | grep -q "Status: active"; then
+    pass "UFW firewall is active"
+else
+    fail "UFW firewall is INACTIVE - CRITICAL RISK"
+fi
+
+# ── CHECK 6: Default incoming policy is deny ──
+if sudo ufw status verbose | grep -q "Default: deny (incoming)"; then
+    pass "Default incoming policy is DENY"
+else
+    fail "Default incoming policy is not DENY - RISK"
+fi
+
+echo ""
+echo "--- Intrusion Detection ---"
+
+# ── CHECK 7: fail2ban service is running ──
+if systemctl is-active --quiet fail2ban; then
+    pass "fail2ban is running"
+else
+    fail "fail2ban is NOT running - RISK"
+fi
+
+# ── CHECK 8: SSH jail is enabled in fail2ban ──
+if sudo fail2ban-client status | grep -q "sshd"; then
+    pass "fail2ban SSH jail is active"
+else
+    fail "fail2ban SSH jail is not active"
+fi
+
+echo ""
+echo "--- Access Control ---"
+
+# ── CHECK 9: AppArmor is running ──
+if systemctl is-active --quiet apparmor; then
+    pass "AppArmor is running"
+else
+    fail "AppArmor is NOT running - RISK"
+fi
+
+# ── CHECK 10: AppArmor profiles in enforce mode ──
+# Count profiles in enforce mode
+ENFORCE_COUNT=$(sudo aa-status 2>/dev/null | grep "profiles are in enforce mode" | awk '{print $1}')
+if [ "$ENFORCE_COUNT" -gt "0" ] 2>/dev/null; then
+    pass "AppArmor has $ENFORCE_COUNT profiles in enforce mode"
+else
+    fail "No AppArmor profiles in enforce mode"
+fi
+
+echo ""
+echo "--- Automatic Updates ---"
+
+# ── CHECK 11: unattended-upgrades is running ──
+if systemctl is-active --quiet unattended-upgrades; then
+    pass "Automatic security updates are enabled"
+else
+    fail "Automatic updates are NOT enabled - RISK"
+fi
+
+# ── CHECK 12: Auto-upgrade config exists ──
+if [ -f /etc/apt/apt.conf.d/20auto-upgrades ]; then
+    pass "Auto-upgrade configuration file exists"
+else
+    fail "Auto-upgrade configuration missing"
+fi
+
+echo ""
+echo "--- User Security ---"
+
+# ── CHECK 13: Root account is locked ──
+ROOT_STATUS=$(sudo passwd -S root 2>/dev/null | awk '{print $2}')
+if [ "$ROOT_STATUS" = "L" ]; then
+    pass "Root account is locked"
+else
+    fail "Root account is NOT locked - RISK"
+fi
+
+# ── CHECK 14: Count sudo users ──
+# Only ubuntu should be in sudo group
+SUDO_USERS=$(getent group sudo | cut -d: -f4)
+info "Users with sudo access: $SUDO_USERS"
+
+echo ""
+echo "================================================"
+echo "  Baseline check complete: $(date)"
+echo "================================================"</pre>
+
+    <h3 style="margin-top:1rem;">Make executable and run</h3>
+    <pre>ubuntu@server:~$ chmod +x ~/security-baseline.sh
+ubuntu@server:~$ bash ~/security-baseline.sh</pre>
+
+    <div class="callout callout-warn">
+      <strong>📸 Evidence needed:</strong> Screenshot the full output of running security-baseline.sh showing all PASS/FAIL results.
+    </div>
+  </div>
+
+  <!-- MONITOR SCRIPT -->
+  <div class="card">
+    <h2>📊 monitor-server.sh</h2>
+    <p style="font-size:0.9rem;color:#6c757d;margin-bottom:1rem;">Script runs on the Windows workstation, connects via SSH, and collects performance metrics from the server remotely.</p>
+
+    <h3>Create on Windows workstation</h3>
+    <p style="font-size:0.85rem;color:#6c757d;">Save this file as <code>monitor-server.sh</code> — run it from PowerShell using Git Bash or WSL, or adapt to a .ps1 PowerShell script.</p>
+
+    <pre>#!/bin/bash
+# monitor-server.sh
+# Runs on WORKSTATION — connects via SSH and collects server metrics
+# Usage: bash monitor-server.sh
+# Requires: SSH key-based auth configured (no password prompt)
+
+# ── Configuration ──
+SERVER_IP="192.168.1.66"          # Server IP address
+SERVER_USER="ubuntu"               # SSH username
+SSH_CMD="ssh ${SERVER_USER}@${SERVER_IP}" # Full SSH command
+
+# ── Output formatting ──
+SEPARATOR="════════════════════════════════════════"
+
+echo "$SEPARATOR"
+echo "  CMPN202 Remote Server Monitor"
+echo "  Workstation → ${SERVER_USER}@${SERVER_IP}"
+echo "  $(date)"
+echo "$SEPARATOR"
+
+# ── METRIC 1: Verify SSH connectivity ──
+echo ""
+echo "[ Connectivity Check ]"
+if $SSH_CMD "echo 'SSH connection successful'" 2>/dev/null; then
+    echo "Status: CONNECTED"
+else
+    echo "Status: FAILED — check network and SSH service"
+    exit 1  # Exit if cannot connect
+fi
+
+# ── METRIC 2: System uptime and load average ──
+echo ""
+echo "[ System Uptime & Load ]"
+# Run uptime command on server via SSH and capture output
+$SSH_CMD "uptime"
+
+# ── METRIC 3: CPU usage snapshot ──
+echo ""
+echo "[ CPU Usage ]"
+# Get CPU idle % from top, calculate usage
+$SSH_CMD "top -bn1 | grep 'Cpu(s)' | awk '{print \"CPU Usage: \" 100-\$8 \"%\"}'"
+
+# ── METRIC 4: Memory usage ──
+echo ""
+echo "[ Memory Usage ]"
+# Run free with human-readable output
+$SSH_CMD "free -h"
+
+# ── METRIC 5: Disk usage ──
+echo ""
+echo "[ Disk Usage ]"
+# Show disk usage for all mounted filesystems
+$SSH_CMD "df -h | grep -v tmpfs"
+
+# ── METRIC 6: Top 5 CPU-consuming processes ──
+echo ""
+echo "[ Top 5 Processes by CPU ]"
+# Sort processes by CPU usage, show top 5
+$SSH_CMD "ps aux --sort=-%cpu | head -6 | awk '{printf \"%-15s %-6s %-6s %s\n\", \$11, \$3, \$4, \$1}'"
+
+# ── METRIC 7: Network connections ──
+echo ""
+echo "[ Active Network Connections ]"
+# Count established connections
+$SSH_CMD "ss -s"
+
+# ── METRIC 8: Failed login attempts ──
+echo ""
+echo "[ Recent Failed SSH Logins ]"
+# Check auth log for failed attempts in last 20 lines
+$SSH_CMD "sudo grep 'Failed password\|Invalid user' /var/log/auth.log 2>/dev/null | tail -5 || echo 'No recent failed logins'"
+
+# ── METRIC 9: Running services ──
+echo ""
+echo "[ Key Service Status ]"
+# Check status of critical services
+for service in ssh ufw fail2ban apparmor nginx; do
+    STATUS=$($SSH_CMD "systemctl is-active $service 2>/dev/null")
+    printf "%-20s %s\n" "$service:" "$STATUS"
+done
+
+# ── METRIC 10: System temperature (if available) ──
+echo ""
+echo "[ System Temperature ]"
+$SSH_CMD "cat /sys/class/thermal/thermal_zone0/temp 2>/dev/null | awk '{printf \"CPU Temp: %.1f°C\n\", \$1/1000}' || echo 'Temperature sensor not available'"
+
+echo ""
+echo "$SEPARATOR"
+echo "  Monitoring complete: $(date)"
+echo "$SEPARATOR"</pre>
+
+    <h3 style="margin-top:1rem;">Run from workstation</h3>
+    <pre>PS C:\Users\spraj> bash monitor-server.sh</pre>
+
+    <div class="callout callout-warn">
+      <strong>📸 Evidence needed:</strong> Screenshot the full output of monitor-server.sh running from your Windows workstation, showing metrics collected remotely via SSH.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📝 Week 5 Reflection</h2>
+    <p style="font-size:0.9rem;">This week involved the most complex configuration so far. The layered security approach — firewall, SSH hardening, AppArmor, and fail2ban — demonstrates defence in depth: each control provides protection independently, so even if one fails, others remain effective.</p>
+    <br>
+    <p style="font-size:0.9rem;">Writing the shell scripts required understanding both bash scripting and the SSH command execution model. The monitor script executes commands remotely by passing them as arguments to SSH — a powerful technique used extensively in DevOps automation tools like Ansible.</p>
+    <br>
+    <p style="font-size:0.9rem;"><strong>Trade-off identified:</strong> fail2ban adds a small overhead monitoring log files continuously. AppArmor adds per-syscall checking overhead. These security costs will be quantified in Week 6 performance testing by comparing baseline metrics before and after security controls are enabled.</p>
+  </div>
+
+  <div class="pagination">
+    <a href="week4.html">← Week 4 — Initial Security</a>
+    <a href="week6.html">Week 6 — Performance Analysis →</a>
+  </div>
+
+</div>
+
+<footer>
+  <strong>CMPN202 Operating Systems Coursework</strong> &nbsp;|&nbsp; University of Roehampton &nbsp;|&nbsp; 2025/26
+</footer>
+
+</body>
+</html>
