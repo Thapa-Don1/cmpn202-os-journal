@@ -215,11 +215,11 @@
 
   <div class="card">
     <h2>📝 Week 1 Reflection</h2>
-    <p style="font-size:0.9rem;">This week involved planning the system architecture and making key technical decisions before implementation. The most significant decision was choosing Ubuntu Server 26.04 LTS over alternatives like Debian or CentOS, primarily due to its AppArmor integration, extensive documentation, and alignment with industry cloud practices.</p>
+    <p style="font-size:0.9rem;">This week consisted of designing the architecture of the system and making important technical decisions before implementation. The main one was to opt for Ubuntu Server 26.04 LTS instead of alternatives like Debian or CentOS due to its support of AppArmor, good documentation, and compliance with industry cloud standards.</p>
     <br>
-    <p style="font-size:0.9rem;">Setting up VirtualBox with a Bridged Adapter allowed SSH connectivity from the Windows host without requiring a second VM, simplifying the infrastructure while still enforcing the command-line only constraint. The initial CLI exploration confirmed the server is running efficiently with minimal resource usage at baseline.</p>
+    <p style="font-size:0.9rem;">Having installed VirtualBox using a Bridged Adapter ensured that the SSH connection could be established to the server from the Windows machine without needing another VM. The first trial run on CLI proved that the server works fine and uses few resources.</p>
     <br>
-    <p style="font-size:0.9rem;"><strong>Challenges:</strong> Initial SSH connection failed with "Connection refused" — resolved by verifying the SSH service was running and confirming the correct IP address from <code>ip addr show</code>.</p>
+    <p style="font-size:0.9rem;"><strong>Challenges:</strong> Unable to connect via SSH to server with message "Connection refused". It was found out that there was no SSH service running or IP address might have been wrong as revealed through <code>ip addr show</code> command.</p>
   </div>
 
   <div class="pagination">
