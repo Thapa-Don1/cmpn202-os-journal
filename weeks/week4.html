@@ -170,11 +170,11 @@ ubuntu@server:~$ bash ~/security-baseline.sh</pre>
 
   <div class="card">
     <h2>📝 Week 4 Reflection</h2>
-    <p style="font-size:0.9rem;">This week marked the transition from planning to implementation. Configuring SSH key-based authentication required careful sequencing — the key must be copied to the server before disabling password authentication, otherwise access is permanently lost.</p>
+    <p style="font-size:0.9rem;">Week 4 was about moving from planning to action. Setting up SSH key-based access was tricky in its sequence of operations — the key had to be transferred to the server first before password access is disabled; otherwise, access is lost forever.</p>
     <br>
-    <p style="font-size:0.9rem;">The UFW firewall configuration highlighted an important trade-off: restricting SSH to only the workstation subnet (192.168.1.0/24) significantly reduces attack surface but means the server cannot be accessed from any other location. This is acceptable for a coursework environment but would require a VPN solution in production.</p>
+    <p style="font-size:0.9rem;">Configuration of UFW firewall involved a crucial compromise — by limiting access to SSH only from the local network range (workstation, 192.168.1.0/24), the server becomes vulnerable to attacks much less but can't be accessed anywhere else. While fine for a coursework, this is definitely not good for actual use and a VPN connection would be necessary.</p>
     <br>
-    <p style="font-size:0.9rem;"><strong>Challenge encountered:</strong> Initial key copy command failed because it was run inside the SSH session rather than on Windows. The fix was to exit the server session first and run the command from Windows PowerShell — a good lesson in understanding which machine commands run on.</p>
+    <p style="font-size:0.9rem;"><strong>Challenge encountered:</strong> The initial attempt to transfer the public key was unsuccessful because it was done while still being logged on via SSH, thus running the command from the server side. The solution was to log out and run it from Windows PS instead.</p>
   </div>
 
   <div class="pagination">
