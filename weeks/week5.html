@@ -186,11 +186,11 @@ APT::Periodic::Unattended-Upgrade "1";</pre>
 
   <div class="card">
     <h2>📝 Week 5 Reflection</h2>
-    <p style="font-size:0.9rem;">This week involved the most complex configuration so far. The layered security approach — firewall, SSH hardening, AppArmor, and fail2ban — demonstrates defence in depth: each control provides protection independently, so even if one fails, others remain effective.</p>
+    <p style="font-size:0.9rem;">This week's assignment had the most complex design setup yet. The combination of security measures such as firewall, SSH hardening, AppArmor, and fail2ban constitutes defense-in-depth security since any one method offers protection on its own, regardless of the other methods being effective or not.</p>
     <br>
-    <p style="font-size:0.9rem;">Writing the shell scripts required understanding both bash scripting and the SSH command execution model. The monitor script executes commands remotely by passing them as arguments to SSH — a powerful technique used extensively in DevOps automation tools like Ansible.</p>
+    <p style="font-size:0.9rem;">Creating shell scripts entailed the use of bash scripting skills as well as an understanding of how the SSH command works. The monitor script runs command through SSH and passes them as arguments to SSH – a very useful technique in tools used in DevOps for command execution.</p>
     <br>
-    <p style="font-size:0.9rem;"><strong>Challenge encountered:</strong> The monitor script failed initially due to invisible encoding characters from copy-pasting into a terminal. The fix was creating the file using Notepad with UTF-8 encoding and saving as "All Files" — a lesson in the importance of file encoding in shell scripting.</p>
+    <p style="font-size:0.9rem;"><strong>Challenge encountered:</strong> My initial problem with the monitor script arose from the presence of invisible encoding when I pasted code onto a terminal window. Solution is using Notepad to create file with UTF-8 encoding and saving as "All Files".</p>
     <br>
     <p style="font-size:0.9rem;"><strong>Trade-off identified:</strong> AppArmor adds per-syscall checking overhead and fail2ban continuously monitors log files. These security costs will be quantified in Week 6 performance testing.</p>
   </div>
