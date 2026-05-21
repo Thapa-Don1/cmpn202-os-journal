@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Week 2 — Security Planning | CMPN202</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<nav>
+  <a href="../index.html" class="brand">⚙️ CMPN202 OS Journal</a>
+  <ul class="nav-links">
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="week1.html">W1</a></li>
+    <li><a href="week2.html" class="active">W2</a></li>
+    <li><a href="week3.html">W3</a></li>
+    <li><a href="week4.html">W4</a></li>
+    <li><a href="week5.html">W5</a></li>
+    <li><a href="week6.html">W6</a></li>
+    <li><a href="week7.html">W7</a></li>
+  </ul>
+</nav>
+
+<div class="page-header container">
+  <span class="week-badge">Week 2 — Phase 2</span>
+  <h1>Security Planning &amp; Testing Methodology</h1>
+  <p>Designing a security baseline, performance testing methodology, and threat model before implementation.</p>
+</div>
+
+<div class="container">
+
+  <div class="card">
+    <h2>✅ Phase Deliverables</h2>
+    <table class="week-table">
+      <thead>
+        <tr><th>Deliverable</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Performance Testing Plan</td><td><span class="badge badge-todo">To Do</span></td></tr>
+        <tr><td>Security Configuration Checklist</td><td><span class="badge badge-todo">To Do</span></td></tr>
+        <tr><td>Threat Model (3+ threats)</td><td><span class="badge badge-todo">To Do</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>📊 Performance Testing Plan</h2>
+    <p style="font-size:0.9rem;color:#6c757d;margin-bottom:1rem;">Remote monitoring methodology — all performance data collected via SSH from the Windows workstation without direct console access.</p>
+
+    <h3 style="margin-bottom:0.75rem;">Monitoring Approach</h3>
+    <table class="week-table">
+      <thead>
+        <tr><th>Metric</th><th>Tool</th><th>Command</th><th>Frequency</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>CPU Usage</td>
+          <td>top / mpstat</td>
+          <td><code>top -bn1</code></td>
+          <td>Every 5 seconds during load</td>
+        </tr>
+        <tr>
+          <td>Memory Usage</td>
+          <td>free</td>
+          <td><code>free -h</code></td>
+          <td>Before and after each test</td>
+        </tr>
+        <tr>
+          <td>Disk I/O</td>
+          <td>iostat</td>
+          <td><code>iostat -x 1 5</code></td>
+          <td>During I/O intensive tests</td>
+        </tr>
+        <tr>
+          <td>Network Performance</td>
+          <td>iperf3</td>
+          <td><code>iperf3 -s / -c</code></td>
+          <td>Network throughput tests</td>
+        </tr>
+        <tr>
+          <td>System Latency</td>
+          <td>ping / ss</td>
+          <td><code>ping -c 10</code></td>
+          <td>Before and after load</td>
+        </tr>
+        <tr>
+          <td>Process Monitor</td>
+          <td>htop</td>
+          <td><code>htop</code></td>
+          <td>Live during testing</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 style="margin:1rem 0 0.75rem;">Testing Phases</h3>
+    <div class="grid-2">
+      <div class="lo-item">
+        <strong>Phase A — Baseline</strong>
+        Record system metrics with no load running. Establishes the normal operating state for comparison.
+      </div>
+      <div class="lo-item">
+        <strong>Phase B — Load Testing</strong>
+        Run each application under stress. Record CPU, memory, disk, and network metrics simultaneously.
+      </div>
+      <div class="lo-item">
+        <strong>Phase C — Bottleneck Analysis</strong>
+        Identify which resource becomes the limiting factor under each workload type.
+      </div>
+      <div class="lo-item">
+        <strong>Phase D — Optimisation</strong>
+        Apply at least two improvements and re-measure to quantify the impact.
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🔒 Security Configuration Checklist</h2>
+    <p style="font-size:0.9rem;color:#6c757d;margin-bottom:1rem;">Planned security controls to be implemented in Weeks 4 and 5. Each item will be evidenced with before/after configuration screenshots.</p>
+
+    <h3 style="margin-bottom:0.75rem;">SSH Hardening</h3>
+    <table class="week-table">
+      <thead>
+        <tr><th>Control</th><th>Setting</th><th>Implemented</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Key-based authentication</td><td>Generate RSA/ED25519 keypair</td><td><span class="badge badge-todo">Week 4</span></td></tr>
+        <tr><td>Disable password authentication</td><td>PasswordAuthentication no</td><td><span class="badge badge-todo">Week 4</span></td></tr>
+        <tr><td>Disable root login</td><td>PermitRootLogin no</td><td><span class="badge badge-todo">Week 4</span></td></tr>
+        <tr><td>Change default SSH port</td><td>Port 2222 (optional)</td><td><span class="badge badge-todo">Week 4</span></td></tr>
+        <tr><td>Limit SSH users</td><td>AllowUsers ubuntu</td><td><span class="badge badge-todo">Week 4</span></td></tr>
+      </tbody>
+    </table>
+
+    <h3 style="margin:1rem 0 0.75rem;">Firewall Configuration</h3>
+    <table class="week-table">
+      <thead>
+        <tr><th>Rule</th><th>Action</th><th>Implemented</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Default incoming</td><td>DENY all</td><td><span class="badge badge-todo">Week 4</span></td></tr>
+        <tr><td>Default outgoing</td><td>ALLOW all</td><td><span class="badge badge-todo">Week 4</span></td></tr>
+        <tr><td>SSH from workstation only</td><td>ALLOW 192.168.1.x port 22</td><td><span class="badge badge-todo">Week 4</span></td></tr>
+        <tr><td>Enable UFW</td><td>ufw enable</td><td><span class="badge badge-todo">Week 4</span></td></tr>
+      </tbody>
+    </table>
+
+    <h3 style="margin:1rem 0 0.75rem;">Advanced Security Controls</h3>
+    <table class="week-table">
+      <thead>
+        <tr><th>Control</th><th>Tool</th><th>Implemented</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Mandatory Access Control</td><td>AppArmor</td><td><span class="badge badge-todo">Week 5</span></td></tr>
+        <tr><td>Intrusion Detection</td><td>fail2ban</td><td><span class="badge badge-todo">Week 5</span></td></tr>
+        <tr><td>Automatic Security Updates</td><td>unattended-upgrades</td><td><span class="badge badge-todo">Week 5</span></td></tr>
+        <tr><td>Security Baseline Script</td><td>security-baseline.sh</td><td><span class="badge badge-todo">Week 5</span></td></tr>
+        <tr><td>Remote Monitoring Script</td><td>monitor-server.sh</td><td><span class="badge badge-todo">Week 5</span></td></tr>
+      </tbody>
+    </table>
+
+    <h3 style="margin:1rem 0 0.75rem;">User Privilege Management</h3>
+    <table class="week-table">
+      <thead>
+        <tr><th>Control</th><th>Action</th><th>Implemented</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Non-root admin user</td><td>User 'ubuntu' with sudo</td><td><span class="badge badge-done">Done</span></td></tr>
+        <tr><td>Disable direct root SSH</td><td>PermitRootLogin no</td><td><span class="badge badge-todo">Week 4</span></td></tr>
+        <tr><td>Sudo logging</td><td>Review /var/log/auth.log</td><td><span class="badge badge-todo">Week 4</span></td></tr>
+        <tr><td>Password policy</td><td>Strong password enforced</td><td><span class="badge badge-todo">Week 4</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>⚠️ Threat Model</h2>
+    <p style="font-size:0.9rem;color:#6c757d;margin-bottom:1rem;">Identifying specific security threats relevant to this Linux server deployment and planned mitigations.</p>
+
+    <div style="margin-bottom:1.5rem;">
+      <div class="callout callout-danger">
+        <strong>Threat 1 — Brute Force SSH Attack</strong><br>
+        <strong>Description:</strong> Automated tools attempt thousands of password combinations against port 22 to gain unauthorised access.<br>
+        <strong>Likelihood:</strong> High — port 22 is continuously scanned on any internet-facing system.<br>
+        <strong>Impact:</strong> Full system compromise if successful.<br>
+        <strong>Mitigation:</strong> Key-based authentication (disables password login), fail2ban to block repeated failures, firewall restricting SSH to workstation IP only.
+      </div>
+    </div>
+
+    <div style="margin-bottom:1.5rem;">
+      <div class="callout callout-danger">
+        <strong>Threat 2 — Privilege Escalation</strong><br>
+        <strong>Description:</strong> An attacker with limited access exploits misconfigured sudo rules or kernel vulnerabilities to gain root privileges.<br>
+        <strong>Likelihood:</strong> Medium — depends on system configuration.<br>
+        <strong>Impact:</strong> Complete system control, data exfiltration, persistent backdoor installation.<br>
+        <strong>Mitigation:</strong> Principle of least privilege, restricted sudo access, regular security updates via unattended-upgrades, AppArmor to confine processes.
+      </div>
+    </div>
+
+    <div style="margin-bottom:1.5rem;">
+      <div class="callout callout-danger">
+        <strong>Threat 3 — Unauthorised Service Exposure</strong><br>
+        <strong>Description:</strong> Unnecessary services running on open ports expose additional attack surface — each service is a potential entry point.<br>
+        <strong>Likelihood:</strong> Medium — default installations often enable unused services.<br>
+        <strong>Impact:</strong> Lateral movement, data interception, denial of service.<br>
+        <strong>Mitigation:</strong> UFW firewall denying all incoming by default, service audit to disable unnecessary services, nmap scanning to verify exposed ports.
+      </div>
+    </div>
+
+    <div>
+      <div class="callout callout-danger">
+        <strong>Threat 4 — Unpatched Software Vulnerabilities</strong><br>
+        <strong>Description:</strong> Known CVEs in outdated packages can be exploited remotely without authentication in some cases.<br>
+        <strong>Likelihood:</strong> High over time if updates are not applied.<br>
+        <strong>Impact:</strong> Remote code execution, data breach, system takeover.<br>
+        <strong>Mitigation:</strong> Automatic security updates via unattended-upgrades, Lynis security auditing, regular manual update checks.
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📝 Week 2 Reflection</h2>
+    <p style="font-size:0.9rem;">This week focused entirely on planning rather than implementation — designing the security approach before touching any configuration files. This mirrors professional practice where security is planned systematically rather than added reactively.</p>
+    <br>
+    <p style="font-size:0.9rem;">The threat modelling exercise highlighted that even a simple single-server deployment faces multiple realistic attack vectors. The most critical finding is that SSH brute force is essentially guaranteed on any networked system, making key-based authentication and fail2ban non-optional controls rather than optional extras.</p>
+    <br>
+    <p style="font-size:0.9rem;"><strong>Key insight:</strong> Security and performance are often in tension — for example, AppArmor adds a small CPU overhead to enforce access controls. These trade-offs will be quantified and analysed in Week 6.</p>
+  </div>
+
+  <div class="pagination">
+    <a href="week1.html">← Week 1 — System Planning</a>
+    <a href="week3.html">Week 3 — Application Selection →</a>
+  </div>
+
+</div>
+
+<footer>
+  <strong>CMPN202 Operating Systems Coursework</strong> &nbsp;|&nbsp; BSc Computer Science &nbsp;|&nbsp; University of Roehampton &nbsp;|&nbsp; 2025/26
+</footer>
+
+</body>
+</html>
