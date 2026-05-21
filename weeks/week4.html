@@ -58,131 +58,77 @@
     <p style="font-size:0.9rem;color:#6c757d;margin-bottom:1rem;">Replacing password authentication with cryptographic key pairs — industry standard for secure server access.</p>
 
     <h3>Step 1 — Generate SSH keypair on Windows workstation</h3>
-    <p style="font-size:0.85rem;color:#6c757d;margin-bottom:0.5rem;">Run in Windows PowerShell (not on the server):</p>
-    <pre>PS C:\Users\spraj> ssh-keygen -t ed25519 -C "cmpn202-coursework"
+    <pre>PS C:\Users\spraj> ssh-keygen -t ed25519 -C "cmpn202-A00026193"
 Generating public/private ed25519 key pair.
 Enter file in which to save the key (C:\Users\spraj/.ssh/id_ed25519):
 Enter passphrase (empty for no passphrase):
 Your identification has been saved in C:\Users\spraj/.ssh/id_ed25519
-Your public key has been saved in C:\Users\spraj/.ssh/id_ed25519.pub
-The key fingerprint is:
-SHA256:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx cmpn202-coursework</pre>
+Your public key has been saved in C:\Users\spraj/.ssh/id_ed25519.pub</pre>
 
     <h3 style="margin-top:1rem;">Step 2 — Copy public key to server</h3>
-    <p style="font-size:0.85rem;color:#6c757d;margin-bottom:0.5rem;">From Windows PowerShell:</p>
-    <pre>PS C:\Users\spraj> type $env:USERPROFILE\.ssh\id_ed25519.pub | ssh ubuntu@192.168.1.66 "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys && chmod 700 ~/.ssh"</pre>
+    <pre>PS C:\Users\spraj> cat $env:USERPROFILE\.ssh\id_ed25519.pub | ssh ubuntu@192.168.1.66 "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys && chmod 700 ~/.ssh"</pre>
 
-    <h3 style="margin-top:1rem;">Step 3 — Test key-based login</h3>
-    <pre>PS C:\Users\spraj> ssh ubuntu@192.168.1.66
-Welcome to Ubuntu 26.04 LTS (GNU/Linux 7.0.0-15-generic x86_64)
-ubuntu@server:~$
-# No password prompt — key authentication successful</pre>
+    <h3 style="margin-top:1rem;">Step 3 — Test key-based login (no password prompt)</h3>
+    <img src="../images/week4-ssh-key-login.png"
+         alt="SSH key-based login with no password prompt"
+         style="max-width:100%;border-radius:8px;margin:0.75rem 0;border:1px solid #dee2e6;">
 
-    <h3 style="margin-top:1rem;">Step 4 — Disable password authentication on server</h3>
-    <p style="font-size:0.85rem;color:#6c757d;margin-bottom:0.5rem;">Edit SSH config via SSH session:</p>
-    <pre>ubuntu@server:~$ sudo nano /etc/ssh/sshd_config</pre>
-
-    <h3 style="margin-top:1rem;">Before — sshd_config (relevant lines)</h3>
-    <pre># Before changes
+    <h3 style="margin-top:1rem;">Step 4 — Harden sshd_config</h3>
+    <p style="font-size:0.85rem;color:#6c757d;margin-bottom:0.5rem;">Before and after comparison:</p>
+    <pre># Before
+#PermitRootLogin prohibit-password
+#PubkeyAuthentication yes
 PasswordAuthentication yes
-PermitRootLogin yes
-PubkeyAuthentication yes</pre>
 
-    <h3 style="margin-top:1rem;">After — sshd_config (hardened)</h3>
-    <pre># After hardening
-PasswordAuthentication no
+# After hardening
 PermitRootLogin no
 PubkeyAuthentication yes
-AllowUsers ubuntu</pre>
+PasswordAuthentication no
+AllowUsers ubuntu
+Banner /etc/issue.net</pre>
 
-    <h3 style="margin-top:1rem;">Step 5 — Restart SSH service</h3>
-    <pre>ubuntu@server:~$ sudo systemctl restart ssh
-ubuntu@server:~$ sudo systemctl status ssh
-● ssh.service - OpenBSD Secure Shell server
-     Loaded: loaded (/usr/lib/systemd/system/ssh.service; enabled)
-     Active: active (running)</pre>
-
-    <div class="callout callout-warn">
-      <strong>📸 Evidence needed:</strong> Replace text blocks above with screenshots from your actual SSH session showing each step. Most importantly capture the successful key-based login with no password prompt.
-    </div>
+    <img src="../images/week4-sshd-config.png"
+         alt="sshd_config hardened settings in nano"
+         style="max-width:100%;border-radius:8px;margin:0.75rem 0;border:1px solid #dee2e6;">
 
     <div class="callout callout-success">
-      <strong>Security outcome:</strong> Password-based SSH login is now completely disabled. Only the Windows workstation holding the private key can authenticate. Brute force password attacks are no longer possible.
+      <strong>Security outcome:</strong> Password-based SSH login is completely disabled. Only the Windows workstation holding the private key can authenticate. Brute force password attacks are no longer possible.
     </div>
   </div>
 
   <!-- FIREWALL -->
   <div class="card">
     <h2>🔥 Firewall Configuration (UFW)</h2>
-    <p style="font-size:0.9rem;color:#6c757d;margin-bottom:1rem;">Configuring UFW (Uncomplicated Firewall) to deny all incoming traffic except SSH from the workstation IP only.</p>
+    <p style="font-size:0.9rem;color:#6c757d;margin-bottom:1rem;">Configuring UFW to deny all incoming traffic except SSH from the workstation subnet only.</p>
 
-    <h3>Step 1 — Check UFW status</h3>
-    <pre>ubuntu@server:~$ sudo ufw status
-Status: inactive</pre>
-
-    <h3 style="margin-top:1rem;">Step 2 — Set default policies</h3>
+    <h3>Commands executed</h3>
     <pre>ubuntu@server:~$ sudo ufw default deny incoming
-Default incoming policy changed to 'deny'
 ubuntu@server:~$ sudo ufw default allow outgoing
-Default outgoing policy changed to 'allow'</pre>
+ubuntu@server:~$ sudo ufw allow from 192.168.1.0/24 to any port 22
+ubuntu@server:~$ sudo ufw enable
+ubuntu@server:~$ sudo ufw status verbose</pre>
 
-    <h3 style="margin-top:1rem;">Step 3 — Allow SSH from workstation IP only</h3>
-    <pre>ubuntu@server:~$ sudo ufw allow from 192.168.1.0/24 to any port 22
-Rule added</pre>
-
-    <h3 style="margin-top:1rem;">Step 4 — Enable firewall</h3>
-    <pre>ubuntu@server:~$ sudo ufw enable
-Command may disrupt existing ssh connections. Proceed with operation (y|n)? y
-Firewall is active and enabled on system startup</pre>
-
-    <h3 style="margin-top:1rem;">Step 5 — Verify complete ruleset</h3>
-    <pre>ubuntu@server:~$ sudo ufw status verbose
-Status: active
-Logging: on (low)
-Default: deny (incoming), allow (outgoing), disabled (routed)
-New profiles: skip
-
-To                         Action      From
---                         ------      ----
-22                         ALLOW IN    192.168.1.0/24</pre>
-
-    <div class="callout callout-warn">
-      <strong>📸 Evidence needed:</strong> Screenshot the UFW status verbose output showing your actual firewall rules. This is a mandatory deliverable.
-    </div>
+    <h3 style="margin-top:1rem;">Firewall ruleset evidence</h3>
+    <img src="../images/week4-firewall.png"
+         alt="UFW firewall status verbose showing rules"
+         style="max-width:100%;border-radius:8px;margin:0.75rem 0;border:1px solid #dee2e6;">
 
     <div class="callout callout-success">
-      <strong>Security outcome:</strong> All incoming connections are blocked by default. Only SSH connections from the local network subnet (192.168.1.0/24) are permitted. Every other port and protocol is denied.
+      <strong>Security outcome:</strong> All incoming connections blocked by default. Only port 22 from 192.168.1.0/24 permitted. 999 other ports confirmed filtered by nmap scan in Week 7.
     </div>
   </div>
 
   <!-- USER MANAGEMENT -->
   <div class="card">
     <h2>👤 User &amp; Privilege Management</h2>
-    <p style="font-size:0.9rem;color:#6c757d;margin-bottom:1rem;">Verifying and documenting the non-root administrative user configuration.</p>
+    <p style="font-size:0.9rem;color:#6c757d;margin-bottom:1rem;">Verifying non-root administrative user configuration following principle of least privilege.</p>
 
-    <h3>Verify current user and groups</h3>
-    <pre>ubuntu@server:~$ whoami
-ubuntu
-ubuntu@server:~$ id
-uid=1000(ubuntu) gid=1000(ubuntu) groups=1000(ubuntu),4(adm),24(cdrom),27(sudo),30(dip),46(plugdev)
-ubuntu@server:~$ sudo -l
-Matching Defaults entries for ubuntu on server:
-    env_reset, mail_badpass
-User ubuntu may run the following commands on server:
-    (ALL : ALL) ALL</pre>
-
-    <h3 style="margin-top:1rem;">Check no other users have sudo access</h3>
-    <pre>ubuntu@server:~$ getent group sudo
-sudo:x:27:ubuntu</pre>
-
-    <h3 style="margin-top:1rem;">Verify root login is disabled</h3>
-    <pre>ubuntu@server:~$ sudo passwd -l root
-passwd: password expiry information changed.
-ubuntu@server:~$ sudo passwd -S root
-root L 05/21/2026 0 99999 7 -1</pre>
+    <img src="../images/week4-user-management.png"
+         alt="User management evidence showing whoami, id, getent group sudo, passwd -S root"
+         style="max-width:100%;border-radius:8px;margin:0.75rem 0;border:1px solid #dee2e6;">
 
     <div class="callout callout-success">
-      <strong>User management summary:</strong> Single non-root user 'ubuntu' with sudo privileges. Root account is locked. Only one user has sudo access. This follows the principle of least privilege.
+      <strong>User management summary:</strong> Single non-root user 'ubuntu' with sudo privileges. Root account locked (status L). Only ubuntu in sudo group. Follows principle of least privilege.
     </div>
   </div>
 
@@ -191,51 +137,44 @@ root L 05/21/2026 0 99999 7 -1</pre>
     <h2>🖥️ SSH Access Evidence</h2>
     <p style="font-size:0.9rem;color:#6c757d;margin-bottom:1rem;">Demonstrating successful SSH connection from Windows workstation to Ubuntu server.</p>
 
-    <div class="callout callout-success">
-      <strong>Connection confirmed:</strong> Successfully connected via SSH from Windows PowerShell using password authentication (Week 1). Key-based authentication to be configured and evidenced this week.
-    </div>
+    <h3>Initial password-based connection (Week 1)</h3>
+    <img src="../images/week4-ssh-connection.png"
+         alt="Successful SSH connection from Windows PowerShell to Ubuntu server"
+         style="max-width:100%;border-radius:8px;margin:0.75rem 0;border:1px solid #dee2e6;">
 
-    <h3>SSH Connection from Windows PowerShell</h3>
-<img src="../images/week4-ssh-connection.png" 
-     alt="Successful SSH connection from Windows PowerShell to Ubuntu server" 
-     style="max-width:100%; border-radius:8px; margin:0.75rem 0; border:1px solid #dee2e6;">
-<div class="callout callout-success">
-  <strong>SSH confirmed:</strong> Successfully connected from Windows PowerShell 
-  to ubuntu@192.168.1.66. Ubuntu 26.04 LTS welcome banner 
-  displayed confirming successful authentication.
-</div>
+    <h3 style="margin-top:1rem;">Key-based connection (no password prompt)</h3>
+    <img src="../images/week4-ssh-key-login.png"
+         alt="SSH key-based login completing without password"
+         style="max-width:100%;border-radius:8px;margin:0.75rem 0;border:1px solid #dee2e6;">
+
+    <div class="callout callout-success">
+      <strong>SSH confirmed:</strong> Successfully connected from PS C:\Users\spraj via key-based authentication. No password prompt — proves key authentication working correctly.
+    </div>
+  </div>
 
   <!-- REMOTE ADMIN EVIDENCE -->
   <div class="card">
     <h2>⌨️ Remote Administration Evidence</h2>
-    <p style="font-size:0.9rem;color:#6c757d;margin-bottom:1rem;">Commands executed remotely via SSH demonstrating full administrative capability without console access.</p>
+    <p style="font-size:0.9rem;color:#6c757d;margin-bottom:1rem;">All server configuration performed exclusively via SSH — no direct console access used.</p>
 
-    <h3>System information gathered remotely</h3>
     <pre>ubuntu@server:~$ uptime
- 13:05:21 up 1:23, 1 user, load average: 0.08, 0.05, 0.01
-ubuntu@server:~$ ps aux --sort=-%cpu | head -10
-USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
-root         1  0.0  0.3 168096 11264 ?        Ss   11:42   0:01 /sbin/init
+ubuntu@server:~$ sudo ufw status verbose
 ubuntu@server:~$ sudo systemctl list-units --type=service --state=running
-  UNIT                        LOAD   ACTIVE SUB     DESCRIPTION
-  cron.service                loaded active running Regular background program
-  networkd-dispatcher.service loaded active running Networkd-dispatcher
-  ssh.service                 loaded active running OpenBSD Secure Shell server
-  systemd-journald.service    loaded active running Journal Service
-  ufw.service                 loaded active running Uncomplicated firewall</pre>
+ubuntu@server:~$ sudo fail2ban-client status
+ubuntu@server:~$ bash ~/security-baseline.sh</pre>
 
-    <div class="callout callout-warn">
-      <strong>📸 Evidence needed:</strong> Replace with actual screenshots of these commands running in your SSH session. Prompt must show <code>ubuntu@server:~$</code>.
+    <div class="callout callout-success">
+      <strong>Remote administration confirmed:</strong> Every command on this page was executed via SSH from Windows PowerShell. The ubuntu@server prompt visible in all screenshots confirms remote execution.
     </div>
   </div>
 
   <div class="card">
     <h2>📝 Week 4 Reflection</h2>
-    <p style="font-size:0.9rem;">This week marked the transition from planning to implementation. Configuring SSH key-based authentication required careful sequencing — the key must be copied to the server before disabling password authentication, otherwise you lock yourself out permanently.</p>
+    <p style="font-size:0.9rem;">This week marked the transition from planning to implementation. Configuring SSH key-based authentication required careful sequencing — the key must be copied to the server before disabling password authentication, otherwise access is permanently lost.</p>
     <br>
     <p style="font-size:0.9rem;">The UFW firewall configuration highlighted an important trade-off: restricting SSH to only the workstation subnet (192.168.1.0/24) significantly reduces attack surface but means the server cannot be accessed from any other location. This is acceptable for a coursework environment but would require a VPN solution in production.</p>
     <br>
-    <p style="font-size:0.9rem;"><strong>Key learning:</strong> The order of operations in security configuration matters critically. Enabling the firewall before confirming SSH rules could have blocked all access. Testing each step before proceeding is essential professional practice.</p>
+    <p style="font-size:0.9rem;"><strong>Challenge encountered:</strong> Initial key copy command failed because it was run inside the SSH session rather than on Windows. The fix was to exit the server session first and run the command from Windows PowerShell — a good lesson in understanding which machine commands run on.</p>
   </div>
 
   <div class="pagination">
