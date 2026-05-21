@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Week 1 — System Planning | CMPN202</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<nav>
+  <a href="../index.html" class="brand">⚙️ CMPN202 OS Journal</a>
+  <ul class="nav-links">
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="week1.html" class="active">W1</a></li>
+    <li><a href="week2.html">W2</a></li>
+    <li><a href="week3.html">W3</a></li>
+    <li><a href="week4.html">W4</a></li>
+    <li><a href="week5.html">W5</a></li>
+    <li><a href="week6.html">W6</a></li>
+    <li><a href="week7.html">W7</a></li>
+  </ul>
+</nav>
+
+<div class="page-header container">
+  <span class="week-badge">Week 1 — Phase 1</span>
+  <h1>System Planning &amp; Distribution Selection</h1>
+  <p>Planning the OS deployment, justifying technical decisions, and documenting system specifications via CLI.</p>
+</div>
+
+<div class="container">
+
+  <div class="card">
+    <h2>✅ Phase Deliverables</h2>
+    <table class="week-table">
+      <thead>
+        <tr><th>Deliverable</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>System Architecture Diagram</td><td><span class="badge badge-progress">In Progress</span></td></tr>
+        <tr><td>Distribution Selection Justification</td><td><span class="badge badge-done">Done</span></td></tr>
+        <tr><td>Workstation Configuration Decision</td><td><span class="badge badge-done">Done</span></td></tr>
+        <tr><td>Network Configuration Documentation</td><td><span class="badge badge-done">Done</span></td></tr>
+        <tr><td>CLI System Specifications</td><td><span class="badge badge-done">Done</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>🗺️ System Architecture</h2>
+    <p style="font-size:0.9rem;color:#6c757d;margin-bottom:1rem;">The dual-system architecture enforces command-line proficiency by requiring all server administration via SSH from the Windows workstation. No graphical interface is used on the server at any point.</p>
+    <div class="grid-2">
+      <div class="callout callout-info">
+        <strong>Server (Ubuntu VM)</strong><br>
+        OS: Ubuntu Server 26.04 LTS<br>
+        Type: Headless — no desktop<br>
+        IP: 192.168.1.66<br>
+        RAM: 3.3GB | Disk: 25GB<br>
+        Access: SSH only
+      </div>
+      <div class="callout callout-info">
+        <strong>Workstation (Windows Host)</strong><br>
+        OS: Windows 10/11<br>
+        Tool: PowerShell + OpenSSH<br>
+        VM Platform: VirtualBox<br>
+        Connection: ssh ubuntu@192.168.1.66<br>
+        Role: Administrative access point
+      </div>
+    </div>
+    <div class="callout callout-warn">
+      <strong>Architecture Diagram:</strong> Add your architecture diagram image here. Draw it using draw.io (free at app.diagrams.net) showing both systems connected via SSH arrow. Export as PNG and upload to your GitHub repo, then replace this callout with:<br>
+      <code>&lt;img src="../images/architecture.png" alt="System architecture diagram" style="max-width:100%;border-radius:8px;"&gt;</code>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🐧 Distribution Selection Justification</h2>
+    <p style="font-size:0.9rem;margin-bottom:1rem;">After evaluating multiple Linux server distributions, <strong>Ubuntu Server 26.04 LTS</strong> was selected based on the following criteria:</p>
+    <table class="week-table">
+      <thead>
+        <tr>
+          <th>Criterion</th>
+          <th>Ubuntu Server 26.04</th>
+          <th>Debian 12</th>
+          <th>CentOS Stream 9</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>LTS Support</td>
+          <td>✅ 5 year LTS</td>
+          <td>✅ Until 2028</td>
+          <td>⚠️ Rolling stream</td>
+        </tr>
+        <tr>
+          <td>Documentation</td>
+          <td>✅ Extensive community</td>
+          <td>✅ Good</td>
+          <td>✅ Enterprise focused</td>
+        </tr>
+        <tr>
+          <td>Package Manager</td>
+          <td>APT (familiar)</td>
+          <td>APT (same)</td>
+          <td>DNF (different)</td>
+        </tr>
+        <tr>
+          <td>Security Tools</td>
+          <td>✅ AppArmor built-in</td>
+          <td>✅ AppArmor available</td>
+          <td>✅ SELinux built-in</td>
+        </tr>
+        <tr>
+          <td>Industry Adoption</td>
+          <td>✅ AWS/Azure default</td>
+          <td>⚠️ Less common</td>
+          <td>✅ Enterprise standard</td>
+        </tr>
+        <tr>
+          <td>Headless Support</td>
+          <td>✅ Native server ISO</td>
+          <td>✅ Available</td>
+          <td>✅ Available</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="callout callout-success" style="margin-top:1rem;">
+      <strong>Conclusion:</strong> Ubuntu Server 26.04 LTS was selected for its long-term support, extensive documentation, built-in AppArmor security framework, and dominance in cloud infrastructure. Its APT package manager and large community make it ideal for learning server administration.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>💻 Workstation Configuration</h2>
+    <p style="font-size:0.9rem;margin-bottom:1rem;"><strong>Option B selected:</strong> Windows host machine with PowerShell OpenSSH client.</p>
+    <div class="grid-2">
+      <div>
+        <h3>Why Option B?</h3>
+        <ul style="padding-left:1.25rem;font-size:0.9rem;color:#6c757d;">
+          <li>No need for a second VM — reduces resource usage</li>
+          <li>Windows 10/11 includes OpenSSH natively</li>
+          <li>PowerShell provides a capable SSH client</li>
+          <li>Mirrors real-world cloud administration workflows</li>
+          <li>Simpler setup with no additional configuration</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Tools Used</h3>
+        <ul style="padding-left:1.25rem;font-size:0.9rem;color:#6c757d;">
+          <li>VirtualBox — VM platform</li>
+          <li>Windows PowerShell — SSH client</li>
+          <li>Windows OpenSSH — built-in SSH</li>
+          <li>GitHub Pages — journal hosting</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🌐 Network Configuration</h2>
+    <table class="week-table">
+      <thead>
+        <tr><th>Setting</th><th>Value</th><th>Purpose</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>VirtualBox Adapter</td>
+          <td>Bridged Adapter</td>
+          <td>Allows VM to get IP from home router — same network as host</td>
+        </tr>
+        <tr>
+          <td>Server IP Address</td>
+          <td>192.168.1.66</td>
+          <td>Static-like DHCP lease — used for all SSH connections</td>
+        </tr>
+        <tr>
+          <td>SSH Port</td>
+          <td>22 (default)</td>
+          <td>Standard SSH communication port</td>
+        </tr>
+        <tr>
+          <td>Protocol</td>
+          <td>SSH over TCP/IP</td>
+          <td>Encrypted remote administration channel</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="callout callout-warn">
+      <strong>Note:</strong> A Bridged Adapter was used instead of Host-Only, placing the VM on the same network as the Windows host. This allows SSH connectivity while also providing internet access for package installation.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>💻 CLI System Specifications</h2>
+    <p style="font-size:0.9rem;color:#6c757d;margin-bottom:1rem;">All commands executed via SSH from Windows PowerShell. Output captured as evidence below.</p>
+
+    <h3>uname -a — Kernel Information</h3>
+    <pre>ubuntu@server:~$ uname -a
+Linux server 7.0.0-15-generic #15-Ubuntu SMP PREEMPT_DYNAMIC Wed Apr 22 16:06:43 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux</pre>
+    <p style="font-size:0.85rem;color:#6c757d;margin-bottom:1rem;">Shows kernel version 7.0.0-15-generic, 64-bit architecture, compiled April 2026.</p>
+
+    <h3>lsb_release -a — Distribution Info</h3>
+    <pre>ubuntu@server:~$ lsb_release -a
+No LSB modules are available.
+Distributor ID: Ubuntu
+Description:    Ubuntu 26.04 LTS
+Release:        26.04
+Codename:       resolute</pre>
+    <p style="font-size:0.85rem;color:#6c757d;margin-bottom:1rem;">Confirms Ubuntu 26.04 LTS (codename: resolute) is installed.</p>
+
+    <h3>free -h — Memory Usage</h3>
+    <pre>ubuntu@server:~$ free -h
+              total        used        free      shared  buff/cache   available
+Mem:          3.3Gi       470Mi       2.6Gi       1.1Mi       451Mi       2.9Gi
+Swap:            0B          0B          0B</pre>
+    <p style="font-size:0.85rem;color:#6c757d;margin-bottom:1rem;">3.3GB total RAM, only 470MB used (9%) — server is running efficiently. No swap configured.</p>
+
+    <h3>df -h — Disk Usage</h3>
+    <pre>ubuntu@server:~$ df -h
+Filesystem      Size  Used Avail Use% Mounted on
+tmpfs           680M  1.1M  679M   1% /run
+/dev/sda2        25G  3.6G   20G  16% /
+tmpfs           1.7G     0  1.7G   0% /dev/shm
+tmpfs           5.0M     0  5.0M   0% /run/lock</pre>
+    <p style="font-size:0.85rem;color:#6c757d;margin-bottom:1rem;">25GB total disk, 3.6GB used (16%) — ample space remaining for applications and logs.</p>
+
+    <h3>ip addr show — Network Interfaces</h3>
+    <pre>ubuntu@server:~$ ip addr show
+1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536
+    inet 127.0.0.1/8 scope host lo
+2: enp0s3: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500
+    inet 192.168.1.66/24 brd 192.168.1.255 scope global dynamic enp0s3</pre>
+    <p style="font-size:0.85rem;color:#6c757d;margin-bottom:1rem;">Two interfaces: loopback (127.0.0.1) and primary network adapter (192.168.1.66) used for SSH.</p>
+
+    <div class="callout callout-warn">
+      <strong>📸 Evidence:</strong> Replace the text outputs above with actual screenshots from your SSH session as you complete this work. Screenshots must show the <code>ubuntu@server:~$</code> prompt clearly.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📝 Week 1 Reflection</h2>
+    <p style="font-size:0.9rem;">This week involved planning the system architecture and making key technical decisions before implementation. The most significant decision was choosing Ubuntu Server 26.04 LTS over alternatives like Debian or CentOS, primarily due to its AppArmor integration, extensive documentation, and alignment with industry cloud practices.</p>
+    <br>
+    <p style="font-size:0.9rem;">Setting up VirtualBox with a Bridged Adapter allowed SSH connectivity from the Windows host without requiring a second VM, simplifying the infrastructure while still enforcing the command-line only constraint. The initial CLI exploration confirmed the server is running efficiently with minimal resource usage at baseline.</p>
+    <br>
+    <p style="font-size:0.9rem;"><strong>Challenges:</strong> Initial SSH connection failed with "Connection refused" — resolved by verifying the SSH service was running and confirming the correct IP address from <code>ip addr show</code>.</p>
+  </div>
+
+  <div class="pagination">
+    <span></span>
+    <a href="week2.html">Week 2 — Security Planning →</a>
+  </div>
+
+</div>
+
+<footer>
+  <strong>CMPN202 Operating Systems Coursework</strong> &nbsp;|&nbsp; BSc Computer Science &nbsp;|&nbsp; University of Roehampton &nbsp;|&nbsp; 2025/26
+</footer>
+
+</body>
+</html>
