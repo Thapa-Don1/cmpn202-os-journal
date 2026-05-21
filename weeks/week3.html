@@ -241,11 +241,11 @@ ubuntu@server:~$ htop --version</pre>
 
   <div class="card">
     <h2>📝 Week 3 Reflection</h2>
-    <p style="font-size:0.9rem;">Application selection was driven by the need to isolate individual OS subsystems — CPU scheduler, memory manager, I/O subsystem, and network stack. By choosing tools that stress one resource primarily, the performance results will clearly reveal how Ubuntu 26.04 manages each subsystem under load.</p>
+    <p style="font-size:0.9rem;">The choice of applications was based on the necessity to measure separately the efficiency of such subsystems as the CPU scheduler, memory management, I/O, and networking. Due to the fact that the selected applications will put a stress on one resource, we can understand how Ubuntu 26.04 handles them.</p>
     <br>
-    <p style="font-size:0.9rem;">Including nginx as a real server application is important because it creates a mixed workload combining CPU, memory, and network — closer to real production scenarios than synthetic benchmarks alone.</p>
+    <p style="font-size:0.9rem;">Inclusion of nginx among the applications is needed since it introduces different types of loads on the operating system (CPU, memory, networking), which resembles production-like use.</p>
     <br>
-    <p style="font-size:0.9rem;"><strong>Key decision:</strong> stress-ng was chosen over the older <code>stress</code> package because it offers more granular control over workload types and produces more detailed output, making it easier to analyse OS behaviour quantitatively.</p>
+    <p style="font-size:0.9rem;"><strong>Key decision:</strong> stress-ng over the outdated stress due to greater granularity and possibility to analyse the results more effectively and thoroughly.</p>
   </div>
 
   <div class="pagination">
