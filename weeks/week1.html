@@ -192,48 +192,26 @@
     <h2>💻 CLI System Specifications</h2>
     <p style="font-size:0.9rem;color:#6c757d;margin-bottom:1rem;">All commands executed via SSH from Windows PowerShell. Output captured as evidence below.</p>
 
-    <h3>uname -a — Kernel Information</h3>
-    <pre>ubuntu@server:~$ uname -a
-Linux server 7.0.0-15-generic #15-Ubuntu SMP PREEMPT_DYNAMIC Wed Apr 22 16:06:43 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux</pre>
-    <p style="font-size:0.85rem;color:#6c757d;margin-bottom:1rem;">Shows kernel version 7.0.0-15-generic, 64-bit architecture, compiled April 2026.</p>
+  <h3>CLI System Specifications — Evidence</h3>
+<p style="font-size:0.85rem;color:#6c757d;margin-bottom:0.5rem;">
+  Commands run directly on server: uname -a, lsb_release -a, free -h, df -h, ip addr show
+</p>
+<img src="../images/week1-cli.png" 
+     alt="CLI system specifications showing uname, lsb_release, free, df and ip addr output" 
+     style="max-width:100%; border-radius:8px; margin:0.75rem 0; border:1px solid #dee2e6;">
 
-    <h3>lsb_release -a — Distribution Info</h3>
-    <pre>ubuntu@server:~$ lsb_release -a
-No LSB modules are available.
-Distributor ID: Ubuntu
-Description:    Ubuntu 26.04 LTS
-Release:        26.04
-Codename:       resolute</pre>
-    <p style="font-size:0.85rem;color:#6c757d;margin-bottom:1rem;">Confirms Ubuntu 26.04 LTS (codename: resolute) is installed.</p>
+<h3 style="margin-top:1rem;">System Update Evidence</h3>
+<p style="font-size:0.85rem;color:#6c757d;margin-bottom:0.5rem;">
+  All packages confirmed up to date via sudo apt update && sudo apt upgrade -y
+</p>
+<img src="../images/week1-system-update.png" 
+     alt="System update output showing all packages up to date" 
+     style="max-width:100%; border-radius:8px; margin:0.75rem 0; border:1px solid #dee2e6;">
 
-    <h3>free -h — Memory Usage</h3>
-    <pre>ubuntu@server:~$ free -h
-              total        used        free      shared  buff/cache   available
-Mem:          3.3Gi       470Mi       2.6Gi       1.1Mi       451Mi       2.9Gi
-Swap:            0B          0B          0B</pre>
-    <p style="font-size:0.85rem;color:#6c757d;margin-bottom:1rem;">3.3GB total RAM, only 470MB used (9%) — server is running efficiently. No swap configured.</p>
-
-    <h3>df -h — Disk Usage</h3>
-    <pre>ubuntu@server:~$ df -h
-Filesystem      Size  Used Avail Use% Mounted on
-tmpfs           680M  1.1M  679M   1% /run
-/dev/sda2        25G  3.6G   20G  16% /
-tmpfs           1.7G     0  1.7G   0% /dev/shm
-tmpfs           5.0M     0  5.0M   0% /run/lock</pre>
-    <p style="font-size:0.85rem;color:#6c757d;margin-bottom:1rem;">25GB total disk, 3.6GB used (16%) — ample space remaining for applications and logs.</p>
-
-    <h3>ip addr show — Network Interfaces</h3>
-    <pre>ubuntu@server:~$ ip addr show
-1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536
-    inet 127.0.0.1/8 scope host lo
-2: enp0s3: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500
-    inet 192.168.1.66/24 brd 192.168.1.255 scope global dynamic enp0s3</pre>
-    <p style="font-size:0.85rem;color:#6c757d;margin-bottom:1rem;">Two interfaces: loopback (127.0.0.1) and primary network adapter (192.168.1.66) used for SSH.</p>
-
-    <div class="callout callout-warn">
-      <strong>📸 Evidence:</strong> Replace the text outputs above with actual screenshots from your SSH session as you complete this work. Screenshots must show the <code>ubuntu@server:~$</code> prompt clearly.
-    </div>
-  </div>
+<div class="callout callout-success">
+  <strong>Evidence confirmed:</strong> All Week 1 CLI commands executed successfully. 
+  System running Ubuntu 26.04 LTS, kernel 7.0.0-15-generic, 3.3GB RAM, 25GB disk, IP 192.168.1.66.
+</div>
 
   <div class="card">
     <h2>📝 Week 1 Reflection</h2>
