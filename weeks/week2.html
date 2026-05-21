@@ -180,20 +180,20 @@
     <div style="margin-bottom:1.5rem;">
       <div class="callout callout-danger">
         <strong>Threat 1 — Brute Force SSH Attack</strong><br>
-        <strong>Description:</strong> Automated tools attempt thousands of password combinations against port 22 to gain unauthorised access.<br>
-        <strong>Likelihood:</strong> High — port 22 is continuously scanned on any internet-facing system.<br>
-        <strong>Impact:</strong> Full system compromise if successful.<br>
-        <strong>Mitigation:</strong> Key-based authentication (disables password login), fail2ban to block repeated failures, firewall restricting SSH to workstation IP only.
+        <strong>Description:</strong> Tools use millions of password guesses to breach port 22 to get unauthorised entry.<br>
+        <strong>Likelihood:</strong> High – since port 22 will constantly be probed by anyone connecting to this server from the internet.<br>
+        <strong>Impact:</strong> Total take-over of the entire system.<br>
+        <strong>Mitigation:</strong>SSH key-based authentication, fail2ban, and a firewall that limits SSH to only workstation IP address.
       </div>
     </div>
 
     <div style="margin-bottom:1.5rem;">
       <div class="callout callout-danger">
         <strong>Threat 2 — Privilege Escalation</strong><br>
-        <strong>Description:</strong> An attacker with limited access exploits misconfigured sudo rules or kernel vulnerabilities to gain root privileges.<br>
-        <strong>Likelihood:</strong> Medium — depends on system configuration.<br>
-        <strong>Impact:</strong> Complete system control, data exfiltration, persistent backdoor installation.<br>
-        <strong>Mitigation:</strong> Principle of least privilege, restricted sudo access, regular security updates via unattended-upgrades, AppArmor to confine processes.
+        <strong>Description:</strong> With limited access to the system, an attacker can leverage a misconfiguration or weakness in the kernel or sudo privileges to escalate to root.<br>
+        <strong>Likelihood:</strong> Medium depending on the system configuration.<br>
+        <strong>Impact:</strong> Total system control and data leakage, amongst others.<br>
+        <strong>Mitigation:</strong> Principle of least privilege, restricting sudo permissions, unattended upgrades for security patches and AppArmor.
       </div>
     </div>
 
@@ -210,21 +210,21 @@
     <div>
       <div class="callout callout-danger">
         <strong>Threat 4 — Unpatched Software Vulnerabilities</strong><br>
-        <strong>Description:</strong> Known CVEs in outdated packages can be exploited remotely without authentication in some cases.<br>
-        <strong>Likelihood:</strong> High over time if updates are not applied.<br>
-        <strong>Impact:</strong> Remote code execution, data breach, system takeover.<br>
-        <strong>Mitigation:</strong> Automatic security updates via unattended-upgrades, Lynis security auditing, regular manual update checks.
+        <strong>Description:</strong>Known CVEs in old versions of software can be used to remotely exploit systems without authentication.<br>
+        <strong>Likelihood:</strong> Likely to happen eventually without updates being installed.<br>
+        <strong>Impact:</strong>Code execution, data theft, system compromise.<br>
+        <strong>Mitigation:</strong> Automatic security updates using unattended-upgrades, security testing with Lynis, manually checking for updates.
       </div>
     </div>
   </div>
 
   <div class="card">
     <h2>📝 Week 2 Reflection</h2>
-    <p style="font-size:0.9rem;">This week focused entirely on planning rather than implementation — designing the security approach before touching any configuration files. This mirrors professional practice where security is planned systematically rather than added reactively.</p>
+    <p style="font-size:0.9rem;">This week was dedicated solely to planning and not implementing anything — thinking about the strategy prior to configuring anything. As with all professional practice, the focus is on carefully planned security, not reactive security.</p>
     <br>
-    <p style="font-size:0.9rem;">The threat modelling exercise highlighted that even a simple single-server deployment faces multiple realistic attack vectors. The most critical finding is that SSH brute force is essentially guaranteed on any networked system, making key-based authentication and fail2ban non-optional controls rather than optional extras.</p>
+    <p style="font-size:0.9rem;">One thing I realized from the threat modeling activity is that even a simple single-server environment would face multiple realistic threats. The most important thing I have learned from this week is the SSH brute force threat – which is guaranteed to occur in any connected computer, which means key authentication and fail2ban become essential rather than nice to haves.</p>
     <br>
-    <p style="font-size:0.9rem;"><strong>Key insight:</strong> Security and performance are often in tension — for example, AppArmor adds a small CPU overhead to enforce access controls. These trade-offs will be quantified and analysed in Week 6.</p>
+    <p style="font-size:0.9rem;"><strong>Key insight:</strong> Performance vs security is a common tradeoff – for example, AppArmor causes some overhead on the CPU in order to restrict access. We will measure these tradeoffs in Week 6.</p>
   </div>
 
   <div class="pagination">
