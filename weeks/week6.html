@@ -286,13 +286,13 @@
 
   <div class="card">
     <h2>📝 Week 6 Reflection</h2>
-    <p style="font-size:0.9rem;">Performance testing revealed clear differences in OS resource management between workload types. stress-ng saturated both CPU cores completely while memory remained stable — confirming the Linux scheduler handles CPU-bound workloads efficiently by distributing across cores. The memory subsystem achieved 20,524 MiB/sec throughput, demonstrating efficient memory management.</p>
+    <p style="font-size:0.9rem;">Performance tests highlighted differences in OS's ability to handle different kinds of workloads. Both CPU cores were fully saturated by stress-ng whereas memory showed no variance — proving that OS can handle CPU-bound tasks effectively by distributing loads evenly among all available cores. The efficiency of memory usage was shown by achieving 20,524 MiB/sec.</p>
     <br>
-    <p style="font-size:0.9rem;">The most significant finding was the disk I/O bottleneck — fio achieved only 52-58 MB/s with 95% disk utilisation, reflecting the limitations of virtualised storage. In a production environment, SSDs or NVMe drives would dramatically improve these figures.</p>
+    <p style="font-size:0.9rem;">The biggest surprise was disk I/O performance bottleneck which resulted in poor throughput of 52-58 MB/s with 95% disk utilisation — showing the limitation of using virtual disks. In a production environment, it's likely to observe drastically better results with the use of SSD or NVMe drives.</p>
     <br>
-    <p style="font-size:0.9rem;">The nginx worker process optimisation produced a measurable 31% improvement in response time — confirming that default configurations are not always optimal. This demonstrates how OS-level tuning directly impacts application performance.</p>
+    <p style="font-size:0.9rem;">Optimising nginx worker processes yielded an impressive 31% improvement of response time — highlighting that even default configurations don't guarantee peak performance.</p>
     <br>
-    <p style="font-size:0.9rem;"><strong>Key trade-off:</strong> Security controls (AppArmor, fail2ban) add per-syscall checking overhead but this was negligible at baseline (CPU remained at ~0%). The protection they provide far outweighs the minimal performance cost in this server configuration.</p>
+    <p style="font-size:0.9rem;"><strong>Key trade-off:</strong> Using security tools like AppArmor and fail2ban requires performing additional per-syscall checks; however, at baseline level, the impact on performance was insignificant (CPU utilisation remained ~0%) considering high importance of security benefits provided by those tools.</p>
   </div>
 
   <div class="pagination">
